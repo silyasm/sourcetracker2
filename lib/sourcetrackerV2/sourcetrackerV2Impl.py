@@ -4,7 +4,7 @@ import logging
 import os
 
 from installed_clients.KBaseReportClient import KBaseReport
-from 
+from sourcetrackerV2.util import _sourceTrackerUtil
 #END_HEADER
 
 
@@ -85,9 +85,6 @@ class sourcetrackerV2:
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
-            mpm,
-            mps,
-            fas,
         }
         #END run_sourcetrackerV2
 
