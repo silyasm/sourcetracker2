@@ -2,8 +2,8 @@
 #BEGIN_HEADER
 import logging
 import os
-import pandas
-import numpy
+from sourcetrackerV2_sourcetrackerUtil.py import gibbs
+
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
@@ -52,22 +52,6 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        # example source otus
-        otus = numpy.array(['o%s' % i for i in range(50)])
-        source1 = numpy.random.randint(0, 1000, size=50)
-        source2 = numpy.random.randint(0, 1000, size=50)
-        source3 = numpy.random.randint(0, 1000, size=50)
-        source_df = pandas.DataFrame([source1, source2, source3], index=['source1', 'source2', 'source3'], columns=otus, dtype=numpy.int32)
-        
-        # example sink otus
-        sink1 = numpy.ceil(.5*source1+.5*source2)
-        sink2 = numpy.ceil(.5*source2+.5*source3)
-        sink3 = numpy.ceil(.5*source1+.5*source3)
-        sink4 = source1
-        sink5 = source2
-        sink6 = numpy.random.randint(0, 1000, size=50)
-        sink_df = pandas.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=numpy.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=numpy.int32)
-        
         alpha1 = .01
         alpha2 = .001
         beta = 10
