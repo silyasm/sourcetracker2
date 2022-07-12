@@ -51,8 +51,8 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        import numpy as np
-        import pandas as pd
+import numpy as np
+import pandas as pd
         
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
