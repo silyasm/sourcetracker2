@@ -11,15 +11,90 @@
     },
     "parameters": [ 
         {
-            "id": "parameter_1",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ ]
-            }
+          "id" : "amplicon_matrix_ref",
+          "optional" : false,
+          "advanced" : false,
+          "allow_multiple" : false,
+          "default_values" : [ "" ],
+          "field_type" : "text",
+          "text_options" : {
+            "valid_ws_types" : ["KBaseMatrices.AmpliconMatrix"]
+          }
+        },
+        {
+          "id": "sample_type",
+          "optional": false,
+          "advanced": false,
+          "allow_multiple": false,
+          "default_values": [ "" ],
+          "field_type": "textsubdata",
+          "textsubdata_options": {
+            "subdata_selection": {
+               "parameter_id": "amplicon_matrix_ref",
+               "path_to_subdata": [
+                   "col_attributemapping_ref",
+                   "<WSREF>",
+                   "attributes"
+               ],
+               "subdata_included": [
+                   "attributes/[*]/attribute",
+                   "attributes/[*]/source",
+                   "col_attributemapping_ref"
+               ],
+               "selection_id": "attribute",
+               "selection_description": [
+                   "attribute",
+                   "source"
+               ],
+               "description_template": "source: {{source}}"
+            },
+            "multiselection": false,
+            "show_src_obj": true,
+            "allow_custom": false
+          }
+        },
+        {
+            "id": "sink_label",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "source_label",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+          "id": "threshold",
+          "optional" : false,
+          "advanced" : true,
+          "allow_multiple": false,
+          "default_values": [ "0.005" ],
+          "field_type": "text",
+          "text_options": {
+            "validate_as": "float",
+            "min_float" : 0.0,
+            "max_float" : 1.0
+          }
+        },
+        {
+          "id": "ascending",
+          "optional":true,
+          "advanced":true,
+          "allow_multiple":false,
+          "default_values":["1"],
+          "field_type" : "checkbox",
+          "checkbox_options":{
+            "checked_value": 1,
+            "unchecked_value": 0
+          }
         }
     ],
     "behavior": {
@@ -34,9 +109,31 @@
                 },{
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
-                },{
-                    "input_parameter": "parameter_1",
-                    "target_property": "parameter_1"
+                },
+                {
+                  "input_parameter" : "amplicon_matrix_ref",
+                  "target_property" : "amplicon_matrix_ref",
+                  "target_type_transform": "resolved-ref"
+                },
+                {
+                  "input_parameter" : "threshold",
+                  "target_property" : "threshold"
+                },
+                {
+                  "input_parameter": "sink_label",
+                  "target_property": "sink_label"
+                },
+                {
+                  "input_parameter": "sample_type",
+                  "target_property": "sample_type"
+                },
+                {
+                  "input_parameter" : "source_label",
+                  "target_property" : "source_label"
+                },
+                {
+                  "input_parameter" : "ascending",
+                  "target_property" : "ascending"
                 }
             ],
             "output_mapping": [
