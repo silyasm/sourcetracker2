@@ -82,6 +82,10 @@ class sourcetrackerV2:
         source_list = ''
         for i in sources:
             source_list += i
+            
+        neither_list = ''
+        for i in neither:
+            neither_list += i
         
         #amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
         
@@ -100,7 +104,7 @@ class sourcetrackerV2:
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'The sinks are ' + sink_list + ', and the sources are ' + source_list },
+                                                'text_message': 'The sinks are ' + sink_list + ', and the sources are ' + source_list + 'but, the samples that are neither are ' + neither_list},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
