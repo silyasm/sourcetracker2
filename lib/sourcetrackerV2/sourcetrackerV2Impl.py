@@ -59,28 +59,28 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
-        sources = pd.DataFrame[()]
-        sinks = pd.DataFrame[()]
-        sample_type = params.get('sample_type')
+        #sources = pd.DataFrame[()]
+        #sinks = pd.DataFrame[()]
+        #sample_type = params.get('sample_type')
         
-        amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
+        #amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
         
-        for column in amplicon_matrix.columns:
-            if sample_types.at[column, 0] == params.get('sink_label'):
-                sink_column = amplicon_matrix.loc[:, column]
-                sinks.insert(0, sink_column)
-            if sample_types.at[column, 0] == params.get('source_label'):
-                source_column = amplicon_matrix.loc[:, column]
-                sources.insert(0, sink_column)
-            else:
-                raise.ValueError('The label' + column + 'does not match either sink nor source label')
+        #for column in amplicon_matrix.columns:
+        #    if sample_types.at[column, 0] == params.get('sink_label'):
+        #        sink_column = amplicon_matrix.loc[:, column]
+        #        sinks.insert(0, sink_column)
+        #    if sample_types.at[column, 0] == params.get('source_label'):
+        #        source_column = amplicon_matrix.loc[:, column]
+        #        sources.insert(0, sink_column)
+        #    else:
+        #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
-        mpm, mps, fas = gibbs(sources, sinks, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay)
+        #mpm, mps, fas = gibbs(sources, sinks, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay)
         
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables'},
+                                                'text_message': 'Yaya Toure'},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
