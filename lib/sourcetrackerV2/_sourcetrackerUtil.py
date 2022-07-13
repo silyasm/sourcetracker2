@@ -1175,7 +1175,7 @@ def graph(self):
         'name': 'plotly_bar.html',
     }
     
-    def get_df(amp_data, dfu, associated_matrix_obj_ref=None, associated_matrix_row=None,
+    def get_df(amp_data, dfu, sample_field, associated_matrix_obj_ref=None, associated_matrix_row=None,
            ascending=1):
     """
     Get Amplicon Matrix Data then make Pandas.DataFrame(),
@@ -1201,6 +1201,12 @@ def graph(self):
     # row_attrmap_name = obj['data'][0]['info'][1]
     attributes = obj['data'][0]['data']['attributes']
     instances = obj['data'][0]['data']['instances']
+    
+    for ind, d in enumerate(attributes):
+        if d['attribute'] == sample_field:
+            break
+    sample_type = {id: instance[ind] for id, instance in instances.items()}
+    sample_types = pdd.DataFrame([sample_type], index= [col_ids])
     
     # order samples by associated matrix row data
     warnning = ''
@@ -1228,6 +1234,6 @@ def graph(self):
 
     df = df.T
 
-    return df
-
+    return df, sample_types
+        
 
