@@ -66,14 +66,15 @@ class sourcetrackerV2:
         sample_type = params.get('sample_type')
         sinks = []
         sources = []
-        
+        neither = []
+
         for sample in sample_type :
             if sample == source_label :
                 sources.append[sample]
             if sample == source_label :
                 sinks.append[sample]
             else:
-                break
+                neither.append[sample]
         sink_list = ''
         for i in sinks:
             sink_list += i
