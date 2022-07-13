@@ -64,6 +64,8 @@ class sourcetrackerV2:
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
+        sinks = []
+        sources = []
         
         for sample in sample_type :
             if sample == source_label :
