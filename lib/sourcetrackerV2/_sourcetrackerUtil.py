@@ -1,5 +1,7 @@
 # Most of code imported from SourceTracker2 code
 # GitHub link: https://github.com/biota/sourcetracker2/blob/master/sourcetracker/_sourcetracker.py
+# Last two functions imported from Taxonomy Abundance Barplot
+# GitHub Link: https://github.com/kbaseapps/TaxonomyAbundance/tree/da7a8968bb355e2abfc531001474e3b8104eb50f
 
 
 #!/usr/bin/env python
@@ -13,9 +15,17 @@
 # ----------------------------------------------------------------------------
 from __future__ import division
 
-import numpy as np
+from plotly.offline import plot
+import plotly.graph_objs as go
+import plotly.express as px
+from plotly.subplots import make_subplots
 import pandas as pd
+import numpy as np
+import os
+import uuid
 import logging
+import itertools
+import copy
 from functools import partial
 from multiprocessing import Pool
 from skbio.stats import subsample_counts
@@ -1015,3 +1025,209 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
             fts = None
 
     return props, props_stds, fts
+
+def graph(self):
+    """
+    Creates the source proportion graph for each sink
+    """
+    logging.info('Graphing by sink')
+
+    grp2inds_d = {'': list(range(len(self.samples)))}
+    num_grps = 1
+
+    try:
+        source_fig = make_subplots(
+            rows=1,
+            cols=num_grps,
+            horizontal_spacing=0.05,
+            x_title="Sample",
+            subplot_titles=list(grp2inds_d.keys()),
+            column_widths=[len(inds) for inds in grp2inds_d.values()],  # TODO account for horizontal_space and bargap
+        )
+    except Exception:
+        source_fig = make_subplots(
+            rows=1,
+            cols=num_grps,
+            x_title="Sample",
+            subplot_titles=list(grp2inds_d.keys()),
+            column_widths=[len(inds) for inds in grp2inds_d.values()],  # TODO account for horizontal_space and bargap
+        )
+
+    start_rank = 'Class'
+    start_level = 2
+
+    source_fig.update_layout(
+        barmode='stack',
+        bargap=0.03,
+        legend_traceorder='reversed',
+        title_text='Rank: %s' % start_rank,
+        title_y=0.97,
+        title_x=0.5,
+        title_yref='container',
+        title_xref='paper',
+        yaxis_title='Proportion',
+        yaxis_range=[0, 1],
+        xaxis_tickangle=45,
+        margin=dict(b=115),  # since xaxis title is annotation, needs to be lowered, liable to fall off
+    )
+
+    # lower x_title
+    source_fig.layout.annotations[-1].update(
+        dict(
+            y= -0.04,
+        )
+    )
+
+    # update axes here
+    # to affect all subplots
+    source_fig.update_yaxes(range=[0, 1])
+    source_fig.update_xaxes(tickangle=45)
+
+    # number traces per rank
+    num_taxonomy = [len(tax2vals_d) for tax2vals_d in self.the_dict.values()]
+    num_traces = [len(tax2vals_d) * num_grps for tax2vals_d in self.the_dict.values()]
+
+    dprint('num_grps', 'num_taxonomy', 'num_traces', run=locals(), json=False)
+
+    dropdown_y = 1.10
+
+    def get_vis_mask(rank_ind, select):
+        """For toggling trace visibilities when selecting rank"""
+        mask = []
+        for i in range(len(RANKS)):
+            if i != rank_ind:
+                mask += [False] * num_traces[i]
+            elif select == 'trace':
+                mask += [True] * num_traces[i]
+            elif select == 'legend':
+                mask += ([True] + [False] * (num_grps - 1)) * num_taxonomy[i]
+            else:
+                raise Exception()
+        return mask
+
+    buttons = [
+        dict(
+            args=[
+                {
+                    'visible': get_vis_mask(i, 'trace'),
+                    'showlegend': get_vis_mask(i, 'legend')
+                },
+                {
+                    'title': 'Rank: %s' % rank
+                }
+            ],
+            label=rank,
+            method='update'
+        )
+        for i, rank in enumerate(RANKS)
+    ]
+
+    source_fig.update_layout(
+        updatemenus=[
+            dict(
+                buttons=[
+                    dict(
+                        args=['showlegend', True],
+                        label='Show legend',
+                        method='relayout',
+                    ),
+                    dict(
+                        args=['showlegend', False],
+                        label='Hide legend',
+                        method='relayout',
+                    ),
+                ],
+                direction="down",
+                pad={"r": 10, "t": 10},
+                showactive=True,
+                x=0,
+                xanchor="left",
+                y=dropdown_y,
+                yanchor="bottom"
+            ),
+            dict(
+                buttons=buttons,
+                active=start_level,
+                direction='down',
+                pad={"r": 10, "t": 10},
+                showactive=True,
+                x=0.15,
+                xanchor="left",
+                y=dropdown_y,
+                yanchor="bottom"
+            )
+        ],
+    )
+
+    dprint(
+        'source_fig.layout.annotations',
+        'len(source_fig.layout.annotations)',
+        run=locals()
+    )
+
+    # write plotly html
+
+    plotly_html_flpth = os.path.join(self.run_dir, "plotly_bar.html")
+    plot(source_fig, filename=plotly_html_flpth)
+
+    return {
+        'path': plotly_html_flpth,
+        'name': 'plotly_bar.html',
+    }
+    
+    def get_df(amp_data, dfu, associated_matrix_obj_ref=None, associated_matrix_row=None,
+           ascending=1):
+    """
+    Get Amplicon Matrix Data then make Pandas.DataFrame(),
+    also get taxonomy data and add it to df, then transpose and return
+    :param amp_permanent_id:
+    :param dfu:
+    :return:
+    """
+    logging.info('Getting DataObject')
+    # Amplicon data
+    row_ids = amp_data['data']['row_ids']
+    col_ids = amp_data['data']['col_ids']
+    values = amp_data['data']['values']
+    
+    # Make pandas DataFrame
+    df = pd.DataFrame(index=row_ids, columns=df_col_ids)
+    for i in range(len(row_ids)):
+        df.iloc[i, :-1] = values[i]
+
+    # Get object
+    test_row_attributes_permanent_id = amp_data['amplicon_matrix_ref']
+    obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
+    # row_attrmap_name = obj['data'][0]['info'][1]
+    attributes = obj['data'][0]['data']['attributes']
+    instances = obj['data'][0]['data']['instances']
+    
+    # order samples by associated matrix row data
+    warnning = ''
+    if associated_matrix_row:
+        logging.info('Start reordering matrix')
+        asso_matrix_obj = dfu.get_objects({
+            'object_refs': [associated_matrix_obj_ref]})['data'][0]['data']
+        asso_matrix_data = asso_matrix_obj['data']
+
+        asso_row_ids = asso_matrix_data['row_ids']
+        asso_col_ids = asso_matrix_data['col_ids']
+        asso_values = asso_matrix_data['values']
+
+        asso_matrix_df = pd.DataFrame(asso_values, index=asso_row_ids, columns=asso_col_ids)
+        asso_matrix_df = asso_matrix_df[col_ids]
+
+        shared_col = list(set(col_ids) & set(asso_col_ids))
+        asso_matrix_df = asso_matrix_df[shared_col]
+
+        asso_matrix_df.sort_values(associated_matrix_row, axis=1, ascending=ascending,inplace=True)
+
+        reordered_columns = copy.deepcopy(list(asso_matrix_df.columns))
+
+        df = df[reordered_columns]
+
+    df = df.T
+
+    return df
+
+

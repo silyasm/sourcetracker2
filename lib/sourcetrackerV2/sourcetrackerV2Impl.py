@@ -2,7 +2,6 @@
 #BEGIN_HEADER
 import logging
 import os
-from sourcetrackerV2_sourcetrackerUtil.py import gibbs
 
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
