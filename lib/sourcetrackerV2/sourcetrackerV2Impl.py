@@ -81,7 +81,7 @@ class sourcetrackerV2:
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[params.get('source_type')],
                                                 'text_message': 'Proportion Tables'},
-                                                'workspace_name': params['workspace_name']})
+                                                'workspace_name': params['workspace_name']}})
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
