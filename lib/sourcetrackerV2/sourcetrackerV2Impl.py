@@ -61,7 +61,7 @@ class sourcetrackerV2:
         delay = 2
         #sources = pd.DataFrame[()]
         #sinks = pd.DataFrame[()]
-        #sample_type = params.get('sample_type')
+        sample_type = params.get('sample_type')
         
         #amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
         
@@ -79,7 +79,7 @@ class sourcetrackerV2:
         
         
         report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
+        report_info = report.create({'report': {'objects_created':[sample_type],
                                                 'text_message': 'Yaya Toure'},
                                                 'workspace_name': params['workspace_name']})
         output = {
