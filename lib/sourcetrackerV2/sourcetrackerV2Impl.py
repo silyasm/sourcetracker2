@@ -63,6 +63,15 @@ class sourcetrackerV2:
         #sinks = pd.DataFrame[()]
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
+        sample_type = params.get('sample_type')
+        
+        for sample in sample_type :
+            if sample == source_label :
+                sources.append[sample]
+            if sample == source_label :
+                sinks.append[sample]
+            else:
+                break
         
         #amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
         
@@ -80,8 +89,8 @@ class sourcetrackerV2:
         
         
         report = KBaseReport(self.callback_url)
-        report_info = report.create_extended_report({'report': {'objects_created':[],
-                                                'text_message': 'The sink label used was ' + sink_label + ', and the source label used was ' + source_label },
+        report_info = report.create({'report': {'objects_created':[],
+                                                'text_message': 'The sinks are ' + sinks + ', and the source label used was ' + source_label },
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
