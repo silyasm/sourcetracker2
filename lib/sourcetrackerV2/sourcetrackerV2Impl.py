@@ -80,8 +80,8 @@ class sourcetrackerV2:
         
         
         report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'The sink label used was ' + source_label + ', and the source label used was ' + sink_label },
+        report_info = report.create_extended_report({'report': {'objects_created':[],
+                                                'text_message': 'The sink label used was ' + sink_label + ', and the source label used was ' + source_label },
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
