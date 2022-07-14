@@ -99,6 +99,7 @@ class sourcetrackerV2:
         #objects_created.append(mpm)
         
         #output_html_files = _generate_html_report(self, self.output_dir)
+        output_html_files = amp_data
         
         report_params = {'message': '',
                          'workspace_name': params['workspace_name'],
