@@ -3,7 +3,6 @@
 import logging
 import os
 
-from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
@@ -52,7 +51,7 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        self.dfu = DataFileUtil(self.callback_url)
+        #self.dfu = DataFileUtil(self.callback_url)
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -100,7 +99,7 @@ class sourcetrackerV2:
         #    else:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
-        #mpm, mps = gibbs(sources, sinks, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay)
+        #mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
         
         report = KBaseReport(self.callback_url)

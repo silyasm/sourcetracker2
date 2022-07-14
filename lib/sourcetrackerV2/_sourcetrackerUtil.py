@@ -946,5 +946,8 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     #            fts.append(ft)
     #    else:
     #        fts = None
-
-    return props, props_stds
+    
+    props_plot = props.plot.bar(title= 'Sink Proprtions', stacked=True)
+    props_stds_plot = props_stds.plot.bar(title= 'Sink Proportions with Standard Deviations', stacked=True)
+    
+    return props_plot, props_stds_plot
