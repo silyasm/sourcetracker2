@@ -2,7 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
-
+from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
@@ -51,7 +51,7 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        #self.dfu = DataFileUtil(self.callback_url)
+        self.dfu = DataFileUtil(self.callback_url)
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -101,6 +101,7 @@ class sourcetrackerV2:
         #output_html_files = _generate_html_report(self, self.output_dir)
         output_html_files = amp_data
         
+        #needs uuid imported
         report_params = {'message': '',
                          'workspace_name': params['workspace_name'],
                          'html_links': output_html_files,
