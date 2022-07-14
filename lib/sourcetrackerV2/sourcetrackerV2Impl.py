@@ -99,7 +99,7 @@ class sourcetrackerV2:
         #    else:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
-        #mpm, mps, fas = gibbs(sources, sinks, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay)
+        #mpm, mps = gibbs(sources, sinks, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay)
         
         
         report = KBaseReport(self.callback_url)

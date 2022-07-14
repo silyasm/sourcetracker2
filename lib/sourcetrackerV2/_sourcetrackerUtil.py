@@ -1,29 +1,9 @@
-# Most of code imported from SourceTracker2 code
-# GitHub link: https://github.com/biota/sourcetracker2/blob/master/sourcetracker/_sourcetracker.py
-# Last two functions imported from Taxonomy Abundance Barplot
-# GitHub Link: https://github.com/kbaseapps/TaxonomyAbundance/tree/da7a8968bb355e2abfc531001474e3b8104eb50f
-
-
-#!/usr/bin/env python
-# ----------------------------------------------------------------------------
-# Copyright (c) 2016--, Biota Technology.
-# www.biota.com
-#
-# Distributed under the terms of the Modified BSD License.
-#
-# The full license is in the file LICENSE, distributed with this software.
-# ----------------------------------------------------------------------------
 from __future__ import division
 
-from plotly.offline import plot
-import plotly.graph_objs as go
-import plotly.express as px
-from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 import os
 import uuid
-import logging
 import itertools
 import copy
 from functools import partial
@@ -33,13 +13,11 @@ from skbio.stats import subsample_counts
 
 def validate_gibbs_input(sources, sinks=None):
     '''Validate `gibbs` inputs and coerce/round to type `np.int32`.
-
     Summary
     -------
     Checks if data contains `nan` or `null` values, and returns data as
     type `np.int32`. If both `sources` and `sinks` are passed, columns must
     match exactly (including order).
-
     Parameters
     ----------
     sources : pd.DataFrame
@@ -47,11 +25,9 @@ def validate_gibbs_input(sources, sinks=None):
     sinks : optional, pd.DataFrame or None
         If not `None` a dataframe containing count data that is castable to
         `np.int32`.
-
     Returns
     -------
     pd.Dataframe(s)
-
     Raises
     ------
     ValueError
@@ -116,19 +92,16 @@ def validate_gibbs_parameters(alpha1, alpha2, beta, restarts,
 
 def intersect_and_sort_samples(sample_metadata, feature_table):
     '''Return input tables retaining only shared samples, row order equivalent.
-
     Parameters
     ----------
     sample_metadata : pd.DataFrame
         Contingency table with rows, columns = samples, metadata.
     feature_table : pd.DataFrame
         Contingency table with rows, columns = samples, features.
-
     Returns
     -------
     sample_metadata, feature_table : pd.DataFrame, pd.DataFrame
         Input tables with unshared samples removed and ordered equivalently.
-
     Raises
     ------
     ValueError
@@ -159,7 +132,6 @@ def get_samples(sample_metadata, col, value):
 def collapse_source_data(sample_metadata, feature_table, source_samples,
                          category, method):
     '''Collapse each set of source samples into an aggregate source.
-
     Parameters
     ----------
     sample_metadata : pd.DataFrame
@@ -173,21 +145,17 @@ def collapse_source_data(sample_metadata, feature_table, source_samples,
     method : str
         One of the available aggregation methods in pd.DataFrame.agg (mean,
         median, prod, sum, std, var).
-
     Returns
     -------
     pd.DataFrame
         Collapsed sample data.
-
     Notes
     -----
     This function calls `validate_gibbs_input` before returning the collapsed
     source table to ensure aggregation has not introduced non-integer values.
-
     The order of the collapsed sources is determined by the sort order of their
     names. For instance, in the example below, .4 comes before 3.0 so the
     collapsed sources will have the 0th row as .4.
-
     Examples
     --------
     >>> samples = ['sample1', 'sample2', 'sample3', 'sample4']
@@ -200,7 +168,6 @@ def collapse_source_data(sample_metadata, feature_table, source_samples,
         sample2   0.4
         sample3   3.0
         sample4   3.0
-
     >>> fdata = np.array([[ 10,  50,  10,  70],
                           [  0,  25,  10,   5],
                           [  0,  25,  10,   5],
@@ -212,7 +179,6 @@ def collapse_source_data(sample_metadata, feature_table, source_samples,
     sample2    0  25  10   5
     sample3    0  25  10   5
     sample4  100   0  10   5
-
     >>> source_samples = ['sample1', 'sample2', 'sample3']
     >>> method = 'sum'
     >>> csources = collapse_source_data(stable, ftable, source_samples,
@@ -231,7 +197,6 @@ def collapse_source_data(sample_metadata, feature_table, source_samples,
 
 def subsample_dataframe(df, depth, replace=False):
     '''Subsample (rarify) input dataframe without replacement.
-
     Parameters
     ----------
     df : pd.DataFrame
@@ -241,7 +206,6 @@ def subsample_dataframe(df, depth, replace=False):
     replace : bool, optional
         If ``True``, subsample with replacement. If ``False`` (the default),
         subsample without replacement.
-
     Returns
     -------
     pd.DataFrame
@@ -255,14 +219,12 @@ def subsample_dataframe(df, depth, replace=False):
 
 def generate_environment_assignments(n, num_sources):
     '''Randomly assign `n` counts to one of `num_sources` environments.
-
     Parameters
     ----------
     n : int
         Number of environment assignments to generate.
     num_sources : int
         Number of possible environment states (this includes the 'Unknown').
-
     Returns
     -------
     seq_env_assignments : np.array
@@ -280,9 +242,7 @@ def generate_environment_assignments(n, num_sources):
 
 class ConditionalProbability(object):
     def __init__(self, alpha1, alpha2, beta, source_data):
-    logging.info('initializing conditional probability calculations: {}'.format(level))
         r"""Set properties used for calculating the conditional probability.
-
         Paramaters
         ----------
         alpha1 : float
@@ -298,7 +258,6 @@ class ConditionalProbability(object):
             Columns are features, rows are collapsed samples. The [i,j]
             entry is the sum of the counts of features j in all samples which
             were considered part of source i.
-
         Attributes
         ----------
         m_xivs : np.array
@@ -330,7 +289,6 @@ class ConditionalProbability(object):
         known_source_cp : np.array
             All precomputable portions of the conditional probability array.
             Dimensions are the same as self.known_p_tv.
-
         Notes
         -----
         This class exists to calculate the conditional probability given in
@@ -340,13 +298,10 @@ class ConditionalProbability(object):
         computations is of paramount importance. This class precomputes
         everything that is static throughout a run of the sampler to reduce the
         innermost for-loop computations.
-
         The formula used to calculate the conditional joint probability is
         described in the project readme file.
-
         The variables are named in the class, as well as its methods, in
         accordance with the variable names used in [1]_.
-
         Examples
         --------
         The class is written so that it will be created before being passed to
@@ -376,7 +331,6 @@ class ConditionalProbability(object):
         Calculating the probability slice.
         >>> cp.calculate_cp_slice(xi, m_xiV, m_V, n_vnoti)
         array([8.55007781e-05, 4.38234238e-01, 9.92823532e-03])
-
         References
         ----------
         .. [1] Knights et al. "Bayesian community-wide culture-independent
@@ -418,7 +372,6 @@ class ConditionalProbability(object):
 
     def calculate_cp_slice(self, xi, m_xiV, m_V, n_vnoti):
         """Calculate slice of the conditional probability matrix.
-
         Parameters
         ----------
         xi : int
@@ -433,7 +386,6 @@ class ConditionalProbability(object):
         n_vnoti : np.array
             Counts of the test sequences in each environment at the current
             iteration of the sampler.
-
         Returns
         -------
         self.joint_probability : np.array
@@ -451,9 +403,7 @@ class ConditionalProbability(object):
 
 
 def gibbs_sampler(sink, cp, restarts, draws_per_restart, burnin, delay):
-    logging.info('completing gibbs sampler: {}'.format(level))
     """Run Gibbs Sampler to estimate feature contributions from a sink sample.
-
     Parameters
     ----------
     sink : np.array
@@ -479,7 +429,6 @@ def gibbs_sampler(sink, cp, restarts, draws_per_restart, burnin, delay):
         additional samples will be drawn every `delay` number of passes. This
         is also known as 'thinning'. Thinning helps reduce the impact of
         correlation between adjacent states of the Markov chain.
-
     Returns
     -------
     final_envcounts : np.array
@@ -624,31 +573,24 @@ def _gibbs_loo(cp_and_sink, restarts, draws_per_restart, burnin, delay):
 def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
           draws_per_restart=1, burnin=100, delay=1, jobs=1,
           create_feature_tables=True):
-    logging.info('Running gibbs function: {}'.format(level))
     '''Gibb's sampling API.
-
     Notes
     -----
     This function exists to allow API calls to source/sink prediction and
     leave-one-out (LOO) source prediction.
-
     Input validation is done on the sources and sinks (if not None). They must
     be dataframes with integerial data (or castable to such). If both
     sources and sinks are provided, their columns must agree exactly.
-
     Input validation is done on the Gibb's parameters, to make sure they are
     numerically acceptable (all must be non-negative, some must be positive
     integers - see below).
-
     Warnings
     --------
     This function does _not_ perform rarefaction, the user should perform
     rarefaction prior to calling this function.
-
     This function does not collapse sources or sinks, it expects each row of
     the `sources` dataframe to represent a unique source, and each row of the
     `sinks` dataframe to represent a unique sink.
-
     Parameters
     ----------
     sources : DataFrame
@@ -699,7 +641,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
         sink. This option can consume large amounts of memory if there are many
         source, sinks, and features. If `False`, feature tables are not
         created.
-
     Returns
     -------
     mpm : DataFrame
@@ -712,7 +653,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
     fas : list
         ith item is a pd.DataFrame of the average feature assignments from each
         source for the ith sink (in the same order as rows of `mpm` and `mps`).
-
     Examples
     --------
     # An example of using the normal prediction.
@@ -720,7 +660,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
     >>> import numpy as np
     >>> import time
     >>> from sourcetracker import gibbs
-
     # Prepare some source data.
     >>> otus = np.array(['o%s' % i for i in range(50)])
     >>> source1 = np.random.randint(0, 1000, size=50)
@@ -729,7 +668,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
     >>> source_df = pd.DataFrame([source1, source2, source3],
                                  index=['source1', 'source2', 'source3'],
                                  columns=otus, dtype=np.int32)
-
     # Prepare some sink data.
     >>> sink1 = np.ceil(.5*source1+.5*source2)
     >>> sink2 = np.ceil(.5*source2+.5*source3)
@@ -741,7 +679,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
                                index=np.array(['sink%s' % i for i in
                                                range(1,7)]),
                                columns=otus, dtype=np.int32)
-
     # Set paramaters
     >>> alpha1 = .01
     >>> alpha2 = .001
@@ -750,18 +687,15 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
     >>> draws_per_restart = 1
     >>> burnin = 2
     >>> delay = 2
-
     >>> mpm, mps, fas = gibbs(source_df, sink_df, alpha1, alpha2, beta,
                               restarts, draws_per_restart, burnin, delay,
                               create_feature_tables=True)
-
     # Run the function on multiple processors
     >>> mpm, mps, fas = gibbs(source_df, sinks=None, alpha1=alpha1,
                               alpha2=alpha2, beta=beta, restarts=restarts,
                               draws_per_restart=draws_per_restart,
                               burnin=burnin, delay=delay, jobs=5,
                               create_feature_tables=True)
-
     # LOO prediction.
     >>> mpm, mps, fas = gibbs(source_df, sinks=None, alpha1, alpha2, beta,
                               restarts, draws_per_restart, burnin, delay,
@@ -809,9 +743,8 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
         f = partial(gibbs_sampler, cp=cp, **kwargs)
         args = sinks.values
         loo = False
-
-    with Pool(jobs) as p:
-        results = p.map(f, args)
+    
+    results = map(f, args)
 
     return collate_gibbs_results([i[0] for i in results],
                                  [i[1] for i in results],
@@ -823,7 +756,6 @@ def gibbs(sources, sinks=None, alpha1=.001, alpha2=.1, beta=10, restarts=10,
 
 def cumulative_proportions(all_envcounts, sink_ids, source_ids):
     '''Calculate contributions of each source for each sink in `sink_ids`.
-
     Parameters
     ----------
     all_envcounts : list
@@ -837,7 +769,6 @@ def cumulative_proportions(all_envcounts, sink_ids, source_ids):
     source_ids : np.array
         ID's of the sources. Must be in the same order as the columns of the
         tables in `all_envcounts`.
-
     Returns
     -------
     proportions : pd.DataFrame
@@ -847,7 +778,6 @@ def cumulative_proportions(all_envcounts, sink_ids, source_ids):
     proportions_std : pd.DataFrame
         A dataframe of floats, identical to `proportions` except the entries
         are the standard deviation of each entry in `proportions`.
-
     Notes
     -----
     This script is designed to be used by `collate_gibbs_results` after
@@ -874,7 +804,6 @@ def cumulative_proportions(all_envcounts, sink_ids, source_ids):
 def single_sink_feature_table(final_env_assignments, final_taxon_assignments,
                               source_ids, feature_ids):
     '''Produce a feature table from the output of `gibbs_sampler`.
-
     Parameters
     ----------
     final_env_assignments : np.array
@@ -891,13 +820,11 @@ def single_sink_feature_table(final_env_assignments, final_taxon_assignments,
         ID's of the sources.
     feature_ids : np.array
         ID's of the features.
-
     Returns
     -------
     pd.DataFrame
         A dataframe containing counts of features contributed to the sink by
         each source.
-
     Notes
     -----
     This script is designed to be used by `collate_gibbs_results` after
@@ -920,7 +847,6 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
                           all_taxon_assignments, sink_ids, source_ids,
                           feature_ids, create_feature_tables, loo):
     '''Collate `gibbs_sampler` output, optionally including feature tables.
-
     Parameters
     ----------
     all_envcounts : list
@@ -952,17 +878,14 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     loo : boolean
         If `True`, collate data based on the assumption that input data was
         generated by a `gibbs_loo` call.
-
     Notes
     -----
     This script is designed to be used by after completion of multiple
     `gibbs_sampler` calls (for different sinks). This function does _not_ check
     that the assumptions of ordering described below are met. It is the user's
     responsibility to check these if using this function independently.
-
     If `loo=False`, the order of the entries in each list (first 3 inputs) must
     be the same, and correspond to the order of the `sink_ids`.
-
     If `loo=True`, the order of the entries in each list (first 3 inputs) must
     be the same, and correspond to the order of the `source_ids`.
     '''
@@ -1014,226 +937,14 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     else:
         props, props_stds = cumulative_proportions(all_envcounts, sink_ids,
                                                    source_ids)
-        if create_feature_tables:
-            fts = []
-            for i, sink_id in enumerate(sink_ids):
-                ft = single_sink_feature_table(all_env_assignments[i],
-                                               all_taxon_assignments[i],
-                                               source_ids, feature_ids)
-                fts.append(ft)
-        else:
-            fts = None
+    #    if create_feature_tables:
+    #        fts = []
+    #        for i, sink_id in enumerate(sink_ids):
+    #            ft = single_sink_feature_table(all_env_assignments[i],
+    #                                           all_taxon_assignments[i],
+    #                                           source_ids, feature_ids)
+    #            fts.append(ft)
+    #    else:
+    #        fts = None
 
-    return props, props_stds, fts
-
-def graph(self):
-    """
-    Creates the source proportion graph for each sink
-    """
-    logging.info('Graphing by sink')
-
-    grp2inds_d = {'': list(range(len(self.samples)))}
-    num_grps = 1
-
-    try:
-        source_fig = make_subplots(
-            rows=1,
-            cols=num_grps,
-            horizontal_spacing=0.05,
-            x_title="Sample",
-            subplot_titles=list(grp2inds_d.keys()),
-            column_widths=[len(inds) for inds in grp2inds_d.values()],  # TODO account for horizontal_space and bargap
-        )
-    except Exception:
-        source_fig = make_subplots(
-            rows=1,
-            cols=num_grps,
-            x_title="Sample",
-            subplot_titles=list(grp2inds_d.keys()),
-            column_widths=[len(inds) for inds in grp2inds_d.values()],  # TODO account for horizontal_space and bargap
-        )
-
-    start_rank = 'Class'
-    start_level = 2
-
-    source_fig.update_layout(
-        barmode='stack',
-        bargap=0.03,
-        legend_traceorder='reversed',
-        title_text='Rank: %s' % start_rank,
-        title_y=0.97,
-        title_x=0.5,
-        title_yref='container',
-        title_xref='paper',
-        yaxis_title='Proportion',
-        yaxis_range=[0, 1],
-        xaxis_tickangle=45,
-        margin=dict(b=115),  # since xaxis title is annotation, needs to be lowered, liable to fall off
-    )
-
-    # lower x_title
-    source_fig.layout.annotations[-1].update(
-        dict(
-            y= -0.04,
-        )
-    )
-
-    # update axes here
-    # to affect all subplots
-    source_fig.update_yaxes(range=[0, 1])
-    source_fig.update_xaxes(tickangle=45)
-
-    # number traces per rank
-    num_taxonomy = [len(tax2vals_d) for tax2vals_d in self.the_dict.values()]
-    num_traces = [len(tax2vals_d) * num_grps for tax2vals_d in self.the_dict.values()]
-
-    dprint('num_grps', 'num_taxonomy', 'num_traces', run=locals(), json=False)
-
-    dropdown_y = 1.10
-
-    def get_vis_mask(rank_ind, select):
-        """For toggling trace visibilities when selecting rank"""
-        mask = []
-        for i in range(len(RANKS)):
-            if i != rank_ind:
-                mask += [False] * num_traces[i]
-            elif select == 'trace':
-                mask += [True] * num_traces[i]
-            elif select == 'legend':
-                mask += ([True] + [False] * (num_grps - 1)) * num_taxonomy[i]
-            else:
-                raise Exception()
-        return mask
-
-    buttons = [
-        dict(
-            args=[
-                {
-                    'visible': get_vis_mask(i, 'trace'),
-                    'showlegend': get_vis_mask(i, 'legend')
-                },
-                {
-                    'title': 'Rank: %s' % rank
-                }
-            ],
-            label=rank,
-            method='update'
-        )
-        for i, rank in enumerate(RANKS)
-    ]
-
-    source_fig.update_layout(
-        updatemenus=[
-            dict(
-                buttons=[
-                    dict(
-                        args=['showlegend', True],
-                        label='Show legend',
-                        method='relayout',
-                    ),
-                    dict(
-                        args=['showlegend', False],
-                        label='Hide legend',
-                        method='relayout',
-                    ),
-                ],
-                direction="down",
-                pad={"r": 10, "t": 10},
-                showactive=True,
-                x=0,
-                xanchor="left",
-                y=dropdown_y,
-                yanchor="bottom"
-            ),
-            dict(
-                buttons=buttons,
-                active=start_level,
-                direction='down',
-                pad={"r": 10, "t": 10},
-                showactive=True,
-                x=0.15,
-                xanchor="left",
-                y=dropdown_y,
-                yanchor="bottom"
-            )
-        ],
-    )
-
-    dprint(
-        'source_fig.layout.annotations',
-        'len(source_fig.layout.annotations)',
-        run=locals()
-    )
-
-    # write plotly html
-
-    plotly_html_flpth = os.path.join(self.run_dir, "plotly_bar.html")
-    plot(source_fig, filename=plotly_html_flpth)
-
-    return {
-        'path': plotly_html_flpth,
-        'name': 'plotly_bar.html',
-    }
-    
-    def get_df(amp_data, dfu, sample_field, associated_matrix_obj_ref=None, associated_matrix_row=None,
-           ascending=1):
-    """
-    Get Amplicon Matrix Data then make Pandas.DataFrame(),
-    also get taxonomy data and add it to df, then transpose and return
-    :param amp_permanent_id:
-    :param dfu:
-    :return:
-    """
-    logging.info('Getting DataObject')
-    # Amplicon data
-    row_ids = amp_data['data']['row_ids']
-    col_ids = amp_data['data']['col_ids']
-    values = amp_data['data']['values']
-    
-    # Make pandas DataFrame
-    df = pd.DataFrame(index=row_ids, columns=df_col_ids)
-    for i in range(len(row_ids)):
-        df.iloc[i, :-1] = values[i]
-
-    # Get object
-    test_row_attributes_permanent_id = amp_data['amplicon_matrix_ref']
-    obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
-    # row_attrmap_name = obj['data'][0]['info'][1]
-    attributes = obj['data'][0]['data']['attributes']
-    instances = obj['data'][0]['data']['instances']
-    
-    for ind, d in enumerate(attributes):
-        if d['attribute'] == sample_field:
-            break
-    sample_type = {id: instance[ind] for id, instance in instances.items()}
-    sample_types = pdd.DataFrame([sample_type], index= [col_ids])
-    
-    # order samples by associated matrix row data
-    warnning = ''
-    if associated_matrix_row:
-        logging.info('Start reordering matrix')
-        asso_matrix_obj = dfu.get_objects({
-            'object_refs': [associated_matrix_obj_ref]})['data'][0]['data']
-        asso_matrix_data = asso_matrix_obj['data']
-
-        asso_row_ids = asso_matrix_data['row_ids']
-        asso_col_ids = asso_matrix_data['col_ids']
-        asso_values = asso_matrix_data['values']
-
-        asso_matrix_df = pd.DataFrame(asso_values, index=asso_row_ids, columns=asso_col_ids)
-        asso_matrix_df = asso_matrix_df[col_ids]
-
-        shared_col = list(set(col_ids) & set(asso_col_ids))
-        asso_matrix_df = asso_matrix_df[shared_col]
-
-        asso_matrix_df.sort_values(associated_matrix_row, axis=1, ascending=ascending,inplace=True)
-
-        reordered_columns = copy.deepcopy(list(asso_matrix_df.columns))
-
-        df = df[reordered_columns]
-
-    df = df.T
-
-    return df, sample_types
-        
-
+    return props, props_stds
