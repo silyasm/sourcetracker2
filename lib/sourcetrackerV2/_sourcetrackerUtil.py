@@ -950,4 +950,24 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     props_plot = props.plot.bar(title= 'Sink Proprtions', stacked=True)
     props_stds_plot = props_stds.plot.bar(title= 'Sink Proportions with Standard Deviations', stacked=True)
     
-    return props_plot, props_stds_plot
+    return props, props_stds, props_plot, props_stds_plot
+    
+def get_df(amp_data):
+    """
+    Get Amplicon Matrix Data then make Pandas.DataFrame(),
+    also get taxonomy data and add it to df, then transpose and return
+    :param amp_permanent_id:
+    :return:
+    """
+    logging.info('Getting DataObject')
+    # Amplicon data
+    row_ids = amp_data['data']['row_ids']
+    col_ids = amp_data['data']['col_ids']
+    values = amp_data['data']['values']
+
+    # Make pandas DataFrame
+    df = pd.DataFrame(index=row_ids, columns=df_col_ids)
+    for i in range(len(row_ids)):
+        df.iloc[i, :-1] = values[i]
+
+    return df

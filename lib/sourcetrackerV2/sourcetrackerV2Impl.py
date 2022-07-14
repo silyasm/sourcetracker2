@@ -64,30 +64,21 @@ class sourcetrackerV2:
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
+        amp_data = params.get('amplicon_matrix_ref')
         sinks = []
         sources = []
         neither = []
-
-        for sample in sample_type :
-            if sample == source_label :
-                sources.append[sample]
-            if sample == source_label :
-                sinks.append[sample]
-            else:
-                neither.append[sample]
-        sink_list = ''
-        for i in sinks:
-            sink_list += i
-
-        source_list = ''
-        for i in sources:
-            source_list += i
-            
-        neither_list = ''
-        for i in neither:
-            neither_list += i
         
-        #amplicon_matrix, sample_types = get_df(params.get('associated_matrix_ref', self.dfu, sample_type)
+        row_ids = amp_data['data']['row_ids']
+        col_ids = amp_data['data']['col_ids']
+        values = amp_data['data']['values']
+        
+        values = ''
+        for i in values
+            values += i
+
+        
+        #amplicon_matrix = get_df(params.get('associated_matrix_ref'))
         
         #for column in amplicon_matrix.columns:
         #    if sample_types.at[column, 0] == params.get('sink_label'):
@@ -99,12 +90,12 @@ class sourcetrackerV2:
         #    else:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
-        #mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
+        #mpm, mps, mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'The sinks are ' + sink_list + ', and the sources are ' + source_list + 'but, the samples that are neither are ' + neither_list},
+                                                'text_message': values},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
