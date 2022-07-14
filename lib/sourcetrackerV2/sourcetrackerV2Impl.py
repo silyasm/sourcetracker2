@@ -68,7 +68,7 @@ class sourcetrackerV2:
         sinks = []
         sources = []
         neither = []
-        
+        row_ids = ''
         for i in amp_data:
             row_ids += amp_data[i][1]
         #col_ids = amp_data['data']['col_ids']
