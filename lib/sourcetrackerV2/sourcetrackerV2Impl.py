@@ -95,7 +95,7 @@ class sourcetrackerV2:
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'The column ids are:' + column_ids},
+                                                'text_message': 'The column ids are:'},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
