@@ -69,7 +69,8 @@ class sourcetrackerV2:
         sources = []
         neither = []
         
-        row_ids = amp_data[0][0]
+        for i in amp_data:
+            row_ids += amp_data[0][i]
         #col_ids = amp_data['data']['col_ids']
         #values = amp_data['data']['values']
         
