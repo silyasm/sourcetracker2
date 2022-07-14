@@ -70,12 +70,12 @@ class sourcetrackerV2:
         neither = []
         
         row_ids = amp_data['data']['row_ids']
-        col_ids = amp_data['data']['col_ids']
-        values = amp_data['data']['values']
+        #col_ids = amp_data['data']['col_ids']
+        #values = amp_data['data']['values']
         
-        column_ids = ''
-        for i in col_ids
-            column_ids += i
+        #column_ids = ''
+        #for i in col_ids
+            #column_ids += i
 
         
         #amplicon_matrix = get_df(params.get('associated_matrix_ref'))
@@ -95,7 +95,7 @@ class sourcetrackerV2:
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'The column ids are:'},
+                                                'text_message': 'Proportion Tables'},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
