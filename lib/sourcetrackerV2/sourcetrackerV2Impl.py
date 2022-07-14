@@ -79,7 +79,7 @@ class sourcetrackerV2:
             #column_ids += i
 
         
-        #amplicon_matrix = get_df(params.get('associated_matrix_ref'))
+        #amplicon_matrix = get_df(amp_data)
         
         #for column in amplicon_matrix.columns:
         #    if sample_types.at[column, 0] == params.get('sink_label'):
@@ -92,16 +92,25 @@ class sourcetrackerV2:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
         #mpm, mps, mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
+        #objects_created = list()
+        #objects_created.append(mpm)
+        #objects_created.append(mpm_plot)
+        #objects_created.append(mpm)
+        #objects_created.append(mpm)
         
+        #output_html_files = _generate_html_report(self, self.output_dir)
         
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables ' + row_ids},
-                                                'workspace_name': params['workspace_name']})
-        output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
-        }
+        report_params = {'message': '',
+                         'workspace_name': workspace_name,
+                         'html_links': output_html_files,
+                         'direct_html_link_index': 0,
+                         'html_window_height': 666,
+                         'report_object_name': 'kb_mds_report_' + str(uuid.uuid4())}
+
+        kbase_report_client = KBaseReport(self.callback_url)
+        output = kbase_report_client.create_extended_report(report_params)
+
+        report_output = {'report_name': output['name'], 'report_ref': output['ref']}
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...

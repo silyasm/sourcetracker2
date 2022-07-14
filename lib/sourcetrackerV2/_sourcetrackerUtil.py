@@ -1,3 +1,7 @@
+#
+#Last two functions taken from NMDS Analysis app
+#GitHub link: https://github.com/kbaseapps/kb_Amplicon/blob/ad8832c93cc49a7f69e244444095c5aa2dc479f0/lib/kb_Amplicon/Utils/MDSUtils.py
+
 from __future__ import division
 
 import pandas as pd
@@ -952,22 +956,62 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     
     return props, props_stds, props_plot, props_stds_plot
     
-def get_df(amp_data):
-    """
-    Get Amplicon Matrix Data then make Pandas.DataFrame(),
-    also get taxonomy data and add it to df, then transpose and return
-    :param amp_permanent_id:
-    :return:
-    """
-    logging.info('Getting DataObject')
-    # Amplicon data
-    row_ids = amp_data['data']['row_ids']
-    col_ids = amp_data['data']['col_ids']
-    values = amp_data['data']['values']
+def get_df(associated_matrix_obj):
+    associated_matrix_obj = self.dfu.get_objects({'object_refs': [associated_matrix_obj_ref]})['data'][0]
+    
+    associated_matrix_data = associated_matrix_obj['data']
+    associated_matrix_name = associated_matrix_obj['info'][1]
+    
+    values = associated_matrix_data['data']['values']
+    row_ids = associated_matrix_data['data']['row_ids']
+    col_ids = associated_matrix_data['data']['col_ids']
+    associated_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
+    
+    return associated_matrix_df
+    
+def _generate_html_report(self, output_dir):
 
-    # Make pandas DataFrame
-    df = pd.DataFrame(index=row_ids, columns=df_col_ids)
-    for i in range(len(row_ids)):
-        df.iloc[i, :-1] = values[i]
+    logging.info('Start generating html report for MDS results...')
+    html_report = list()
 
-    return df
+    srctrkr_plots = list()
+    for root, folders, files in os.walk(output_dir):
+        # Find the image files by their extensions.
+        for f in files:
+            if re.match('^[a-zA-Z]+.*.(html)$', f):  # jpeg|jpg|bmp|png|tiff|pdf|ps|
+                absolute_path = os.path.join(root, f)
+                logging.info("Adding file {} to plot archive.".format(absolute_path))
+                srctrkr_plots.append(absolute_path)
+
+    result_dir = os.path.join(self.working_dir, str(uuid.uuid4()))
+    self._mkdir_p(result_dir)
+    result_file_path = os.path.join(result_dir, 'mds_result.html')
+
+    visualization_content = ''
+
+    for srctrkr_plot in srctrkr_plots:
+        shutil.copy2(srctrkr_plot,
+                     os.path.join(result_dir, os.path.basename(srctrkr_plot)))
+        visualization_content += '<iframe height="900px" width="100%" '
+        visualization_content += 'src="{}" '.format(os.path.basename(srctrkr_plot))
+        visualization_content += 'style="border:none;"></iframe>\n<p></p>\n'
+
+    with open(result_file_path, 'w') as result_file:
+        with open(os.path.join(os.path.dirname(__file__), 'templates', 'mds_template.html'),
+                  'r') as report_template_file:
+            report_template = report_template_file.read()
+            report_template = report_template.replace('<p>Visualization_Content</p>',
+                                                      visualization_content)
+            report_template = report_template.replace('2',
+                                                      '{} Components'.format(2))
+            result_file.write(report_template)
+
+    report_shock_id = self.dfu.file_to_shock({'file_path': result_dir,
+                                              'pack': 'zip'})['shock_id']
+
+    html_report.append({'shock_id': report_shock_id,
+                        'name': os.path.basename(result_file_path),
+                        'label': os.path.basename(result_file_path),
+                        'description': 'HTML summary report for MDS Matrix App'
+                        })
+    return html_report
