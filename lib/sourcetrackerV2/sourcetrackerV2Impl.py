@@ -101,7 +101,7 @@ class sourcetrackerV2:
         #output_html_files = _generate_html_report(self, self.output_dir)
         
         report_params = {'message': '',
-                         'workspace_name': workspace_name,
+                         'workspace_name': params['workspace_name'],
                          'html_links': output_html_files,
                          'direct_html_link_index': 0,
                          'html_window_height': 666,
