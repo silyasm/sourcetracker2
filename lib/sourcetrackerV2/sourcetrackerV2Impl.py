@@ -3,6 +3,7 @@
 import logging
 import os
 
+from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
@@ -51,7 +52,7 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        #self.dfu = DataFileUtil(self.callback_url)
+        self.dfu = DataFileUtil(self.callback_url)
         alpha1 = .01
         alpha2 = .001
         beta = 10
