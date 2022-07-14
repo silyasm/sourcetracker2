@@ -69,7 +69,7 @@ class sourcetrackerV2:
         sources = []
         neither = []
         
-        row_ids = amp_data['data']['row_ids']
+        row_ids = amp_data[0][4]
         #col_ids = amp_data['data']['col_ids']
         #values = amp_data['data']['values']
         
@@ -95,7 +95,7 @@ class sourcetrackerV2:
         
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables'},
+                                                'text_message': 'Proportion Tables' + row_ids},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
