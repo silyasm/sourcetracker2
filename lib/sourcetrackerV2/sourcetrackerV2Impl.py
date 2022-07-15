@@ -2,7 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
-
+import pandas
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
