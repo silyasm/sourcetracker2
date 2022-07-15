@@ -3,7 +3,7 @@
 import logging
 import os
 import pandas
-from sourcetrackerV2.Util._sourcetrackerUtil import gibbs
+import numpy
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
