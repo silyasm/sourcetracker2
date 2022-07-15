@@ -52,7 +52,7 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        self.dfu = DataFileUtil(self.callback_url)
+        #self.dfu = DataFileUtil(self.callback_url)
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -108,7 +108,7 @@ class sourcetrackerV2:
                          'html_links': output_html_files,
                          'direct_html_link_index': 0,
                          'html_window_height': 666,
-                         'report_object_name': 'kb_mds_report_' + str(uuid.uuid4())}
+                         'report_object_name': 'kb_source_tracker_report_'}
 
         kbase_report_client = KBaseReport(self.callback_url)
         output = kbase_report_client.create_extended_report(report_params)
