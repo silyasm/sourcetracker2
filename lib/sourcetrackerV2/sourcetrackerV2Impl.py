@@ -2,7 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
-import pandas as pd
+import pandas
 
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
@@ -112,7 +112,6 @@ class sourcetrackerV2:
             'report_ref': report_info['ref'],
         }
 
-        report_output = {'report_name': output['name'], 'report_ref': output['ref']}
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...
