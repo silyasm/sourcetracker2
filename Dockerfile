@@ -17,7 +17,7 @@ RUN python -m pip install --upgrade pip
 # Install required python packages
 RUN pip install pandas
 RUN pip install numpy
-RUN pip install scikit-bio
+RUN pip install scikit-bio.stats
 
 # add other packages you need
 # from GitHub install source tracker (if needed)
