@@ -2,8 +2,11 @@
 #BEGIN_HEADER
 import logging
 import os
-import pandas
-import numpy
+import pandas as pd
+import numpy as np
+import copy
+from functools import partial
+from skbio.stats import subsample_counts
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 

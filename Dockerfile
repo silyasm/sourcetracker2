@@ -17,6 +17,9 @@ RUN python -m pip install --upgrade pip
 # Install required python packages
 RUN pip install pandas
 RUN pip install numpy
+RUN pip install functools
+RUN pip install copy
+RUN pip install skbio.stats
 
 # add other packages you need
 # from GitHub install source tracker (if needed)
