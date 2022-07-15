@@ -70,8 +70,8 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
-        for i in amp_data:
-            row_ids += i
+        #for i in amp_data:
+            #row_ids += i
         #col_ids = amp_data['data']['col_ids']
         #values = amp_data['data']['values']
         
@@ -93,14 +93,8 @@ class sourcetrackerV2:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
         
         #mpm, mps, mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        #objects_created = list()
-        #objects_created.append(mpm)
-        #objects_created.append(mpm_plot)
-        #objects_created.append(mpm)
-        #objects_created.append(mpm)
         
         #output_html_files = _generate_html_report(self, self.output_dir)
-        output_html_files = amp_data
         
         #needs uuid imported
                 report = KBaseReport(self.callback_url)
