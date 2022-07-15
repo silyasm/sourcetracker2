@@ -3,7 +3,7 @@
 import logging
 import os
 import pandas as pd
-from installed_clients.DataFileUtilClient import DataFileUtil
+
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
