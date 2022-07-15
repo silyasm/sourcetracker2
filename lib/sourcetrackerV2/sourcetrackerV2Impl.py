@@ -96,9 +96,9 @@ class sourcetrackerV2:
         #output_html_files = _generate_html_report(self, self.output_dir)
         
         #needs uuid imported
-                report = KBaseReport(self.callback_url)
+        report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables',
+                                                'text_message': 'Proportion Tables ' + row_ids},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
