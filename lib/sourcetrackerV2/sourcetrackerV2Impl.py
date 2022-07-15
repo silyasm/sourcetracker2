@@ -1058,7 +1058,7 @@ class sourcetrackerV2:
         #needs uuid imported
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables ' + row_ids},
+                                                'text_message': 'Proportion Tables ' + mpm + mps},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
