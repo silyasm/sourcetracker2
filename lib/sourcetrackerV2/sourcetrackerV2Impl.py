@@ -103,15 +103,14 @@ class sourcetrackerV2:
         output_html_files = amp_data
         
         #needs uuid imported
-        report_params = {'message': '',
-                         'workspace_name': params['workspace_name'],
-                         'html_links': output_html_files,
-                         'direct_html_link_index': 0,
-                         'html_window_height': 666,
-                         'report_object_name': 'kb_source_tracker_report_'}
-
-        kbase_report_client = KBaseReport(self.callback_url)
-        output = kbase_report_client.create_extended_report(report_params)
+                report = KBaseReport(self.callback_url)
+        report_info = report.create({'report': {'objects_created':[],
+                                                'text_message': 'Proportion Tables',
+                                                'workspace_name': params['workspace_name']})
+        output = {
+            'report_name': report_info['name'],
+            'report_ref': report_info['ref'],
+        }
 
         report_output = {'report_name': output['name'], 'report_ref': output['ref']}
         #END run_sourcetrackerV2
