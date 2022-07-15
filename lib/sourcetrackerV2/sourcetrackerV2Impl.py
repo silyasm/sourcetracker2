@@ -993,8 +993,10 @@ class sourcetrackerV2:
             #            fts.append(ft)
             #    else:
             #        fts = None
+            
+            message = 'the gibbs function was completed'
 
-            return props, props_stds
+            return props, props_stds, message
 
         alpha1 = .01
         alpha2 = .001
@@ -1020,7 +1022,7 @@ class sourcetrackerV2:
         sink6 = np.random.randint(0, 1000, size=50)
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
-        mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
+        mpm, mps, message = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
@@ -1058,7 +1060,7 @@ class sourcetrackerV2:
         #needs uuid imported
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables ' + mpm + mps},
+                                                'text_message': 'Proportion Tables ' + message},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
