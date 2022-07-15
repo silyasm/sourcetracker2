@@ -6,7 +6,22 @@ MAINTAINER KBase Developer
 # install line here, a git checkout to download code, or run any other
 # installation scripts.
 
-# RUN apt-get update
+RUN apt-get update
+
+# Install gcc, a dependency for the python packages below
+RUN apt-get install -y gcc
+
+# Install pip in order to install python packages
+RUN python -m pip install --upgrade pip
+
+# Install required python packages
+RUN pip install pandas
+RUN pip install numpy
+
+# add other packages you need
+# from GitHub install source tracker (if needed)
+#RUN pip install https://github.com/biota/sourcetracker2/archive/master.zip
+
 
 
 # -----------------------------------------

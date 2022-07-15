@@ -2,6 +2,7 @@
 #BEGIN_HEADER
 import logging
 import os
+from _sourcetrackerUtil import (gibbs)
 from installed_clients.DataFileUtilClient import DataFileUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
