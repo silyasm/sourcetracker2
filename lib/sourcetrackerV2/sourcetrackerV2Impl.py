@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 import copy
 from functools import partial
-import sourcetrackerV2.Util._sourcetrackerUtil import _sourcetrackerUtil
 from installed_clients.KBaseReportClient import KBaseReport
 #END_HEADER
 
