@@ -1066,12 +1066,12 @@ class sourcetrackerV2:
         message = str(amp_matrix.columns[2])
         
         mpm_html = mpm.to_html()
-        mpm_file = open("index.html", "w")
+        mpm_file = open("mpm.html", "w")
         mpm_file.write(mpm_html)
         mpm_file.close()
         
         amplicon_html = amp_matrix.to_html()
-        amplicon_file = open("index.html", "w")
+        amplicon_file = open("amp.html", "w")
         amplicon_file.write(amplicon_html)
         amplicon_file.close()
         
