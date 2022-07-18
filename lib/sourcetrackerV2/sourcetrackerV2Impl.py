@@ -994,9 +994,7 @@ class sourcetrackerV2:
             #    else:
             #        fts = None
             
-            message = 'the gibbs function was completed'
-
-            return props, props_stds, message
+            return props, props_stds
 
         alpha1 = .01
         alpha2 = .001
@@ -1022,7 +1020,7 @@ class sourcetrackerV2:
         sink6 = np.random.randint(0, 1000, size=50)
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
-        mpm, mps, message = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
+        mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
@@ -1031,6 +1029,7 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
+        message = string(mpm.iat[0,0])
         #for i in amp_data:
             #row_ids += i
         #col_ids = amp_data['data']['col_ids']
