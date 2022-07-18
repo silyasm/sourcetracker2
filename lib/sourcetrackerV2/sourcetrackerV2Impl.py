@@ -1006,7 +1006,7 @@ class sourcetrackerV2:
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=df_col_ids)
         
-        return df
+            return df
 
         alpha1 = .01
         alpha2 = .001
