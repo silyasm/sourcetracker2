@@ -1025,6 +1025,7 @@ class sourcetrackerV2:
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
+        self.scratch = config['scratch']
             
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
