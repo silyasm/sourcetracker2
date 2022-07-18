@@ -1065,8 +1065,15 @@ class sourcetrackerV2:
         row_ids = ''
         message = str(amp_matrix.columns[2])
         
-        mpm_html = str(mpm.to_html())
-        amplicon_html = str(amp_matrix.to_html())
+        mpm_html = mpm.to_html()
+        mpm_file = open("index.html", "w")
+        mpm_file.write(mpm_html)
+        mpm_file.close()
+        
+        amplicon_html = amp_matrix.to_html()
+        amplicon_file = open("index.html", "w")
+        amplicon_file.write(amplicon_html)
+        amplicon_file.close()
         
         #for i in amp_data:
             #row_ids += i
@@ -1100,12 +1107,12 @@ class sourcetrackerV2:
         report_params = {
         'message': message,
         'workspace_name': params['workspace_name'],
-        'html_links':[mpm_html, amplicon_html],
+        'html_links':[mpm_file, amplicon_file],
             'direct_html_link_index': 0,
-            'direct_html': mpm_html,
+            'direct_html': mpm_file,
             'html_window_height': 333,
             'direct_html_link_index': 1,
-            'direct_html': amplicon_html,
+            'direct_html': amplicon_file,
             'html_window_height': 333,
         }
         
