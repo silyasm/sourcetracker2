@@ -1076,10 +1076,19 @@ class sourcetrackerV2:
         
         #output_html_files = _generate_html_report(self, self.output_dir)
         
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        self._mkdir_p(output_directory)
+        result_file_path = os.path.join(output_directory, 'report.html')
+        
+        report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,'pack': 'zip'})['shock_id']
+        
         report_params = {
         'message': message,
         'workspace_name': params['workspace_name'],
-        'html_links': dict[],
+        'html_links': {'shock_id': report_shock_id,
+                       'name': os.path.basename(result_file_path),
+                       'label': os.path.basename(result_file_path),
+                       'description': 'HTML summary report for Source Tracker App'},
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
             'html_window_height': 333,
