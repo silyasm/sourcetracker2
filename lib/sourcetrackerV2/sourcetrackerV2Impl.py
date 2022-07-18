@@ -1051,7 +1051,7 @@ class sourcetrackerV2:
         row_ids = ''
         message = str(amp_matrix.columns[2])
         
-        mpm_html = mpm.to_html()
+        mpm_html = str(mpm.to_html())
         
         #for i in amp_data:
             #row_ids += i
