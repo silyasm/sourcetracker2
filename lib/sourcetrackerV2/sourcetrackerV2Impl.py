@@ -1068,12 +1068,12 @@ class sourcetrackerV2:
         mpm_html = mpm.to_html()
         mpm_file = open("mpm.html", "w")
         mpm_file.write(mpm_html)
-        mpm_file.close()
+        #mpm_file.close()
         
         amplicon_html = amp_matrix.to_html()
         amplicon_file = open("amp.html", "w")
         amplicon_file.write(amplicon_html)
-        amplicon_file.close()
+        #amplicon_file.close()
         
         #for i in amp_data:
             #row_ids += i
