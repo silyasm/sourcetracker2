@@ -1025,7 +1025,6 @@ class sourcetrackerV2:
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
-        self.scratch = config['scratch']
             
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1077,7 +1076,7 @@ class sourcetrackerV2:
         
         #output_html_files = _generate_html_report(self, self.output_dir)
         
-        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
         result_file_path = os.path.join(output_directory, 'report.html')
         
