@@ -1020,7 +1020,6 @@ class sourcetrackerV2:
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
-        amp_data = params.get('amplicon_matrix_ref')
 
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1039,7 +1038,7 @@ class sourcetrackerV2:
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        amp_matrix = get_df(amp_data)
+        amp_matrix = get_df(params.get('amplicon_matrix_ref'))
                 
         sinks = []
         sources = []
