@@ -998,13 +998,15 @@ class sourcetrackerV2:
             return props, props_stds
         
         def get_df(amp_data):
-        row_ids = amp_data['data']['row_ids']
-        col_ids = amp_data['data']['col_ids']
-        values = amp_data['data']['values']
-        
-        df = pd.DataFrame(index=row_ids, columns=df_col_ids)
-        for i in range(len(row_ids)):
-            df.iloc[i, :-1] = values[i]
+        res = self.dfu.get_objects({'object_refs': [amp_data]})['data'][0]
+        obj_data = res['data']
+        obj_name = res['info'][1]
+        obj_type = res['info'][2]
+
+        matrix_tab = obj_data['data']['values']
+        row_ids = obj_data['data']['row_ids']
+        col_ids = obj_data['data']['col_ids']
+        matrix_df = pd.DataFrame(matrix_tab, index=row_ids, columns=col_ids)
         
         return df
 
@@ -1053,7 +1055,6 @@ class sourcetrackerV2:
             #column_ids += i
 
         
-        #amplicon_matrix = get_df(amp_data)
         
         #for column in amplicon_matrix.columns:
         #    if sample_types.at[column, 0] == params.get('sink_label'):
@@ -1064,8 +1065,6 @@ class sourcetrackerV2:
         #        sources.insert(0, sink_column)
         #    else:
         #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
-        
-        #mpm, mps, mpm_plot, mps_plot = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
         #output_html_files = _generate_html_report(self, self.output_dir)
         

@@ -956,16 +956,16 @@ def collate_gibbs_results(all_envcounts, all_env_assignments,
     
     return props, props_stds, props_plot, props_stds_plot
     
-def get_df(associated_matrix_obj):
-    associated_matrix_obj = self.dfu.get_objects({'object_refs': [associated_matrix_obj_ref]})['data'][0]
-    
-    associated_matrix_data = associated_matrix_obj['data']
-    associated_matrix_name = associated_matrix_obj['info'][1]
-    
-    values = associated_matrix_data['data']['values']
-    row_ids = associated_matrix_data['data']['row_ids']
-    col_ids = associated_matrix_data['data']['col_ids']
-    associated_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
+def get_df(associated_matrix_obj, dfu):
+    res = self.dfu.get_objects({'object_refs': [input_obj_ref]})['data'][0]
+    obj_data = res['data']
+    obj_name = res['info'][1]
+    obj_type = res['info'][2]
+
+    matrix_tab = obj_data['data']['values']
+    row_ids = obj_data['data']['row_ids']
+    col_ids = obj_data['data']['col_ids']
+    matrix_df = pd.DataFrame(matrix_tab, index=row_ids, columns=col_ids)
     
     return associated_matrix_df
     
