@@ -1078,7 +1078,7 @@ class sourcetrackerV2:
         
         report_params = {
         'message': message,
-        'workspace_name': ws_name,
+        'workspace_name': params['workspace_name'],
         'html_links': mpm_html,
             'direct_html': 0,
             'html_window_height': 333,
