@@ -1007,7 +1007,7 @@ class sourcetrackerV2:
         #col_ids = associated_matrix_data['data']['col_ids']
         #associated_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
         
-        return associated_matrix_df
+        #return associated_matrix_df
 
         alpha1 = .01
         alpha2 = .001
