@@ -9,6 +9,7 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly.subplots import make_subplots
+from bs4 import BeautifulSoup
 import copy
 from functools import partial
 from skbio.stats import subsample_counts
@@ -1066,14 +1067,10 @@ class sourcetrackerV2:
         message = str(amp_matrix.columns[2])
         
         mpm_html = mpm.to_html()
-        mpm_file = open("mpm.html", "w")
-        mpm_file.write(mpm_html)
-        #mpm_file.close()
+        mpm_file = BeautifulSoup(mpm_html)
         
         amplicon_html = amp_matrix.to_html()
-        amplicon_file = open("amp.html", "w")
-        amplicon_file.write(amplicon_html)
-        #amplicon_file.close()
+        amplicon_file = BeautifulSoup(amplicon_html)
         
         #for i in amp_data:
             #row_ids += i
