@@ -8,6 +8,7 @@ import copy
 from functools import partial
 from skbio.stats import subsample_counts
 from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.DataFileUtilClient import DataFileUtil
 #END_HEADER
 
 
