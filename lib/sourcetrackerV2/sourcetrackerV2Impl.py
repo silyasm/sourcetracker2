@@ -2,8 +2,13 @@
 #BEGIN_HEADER
 import logging
 import os
+import uuid
 import pandas as pd
 import numpy as np
+from plotly.offline import plot
+import plotly.graph_objs as go
+import plotly.express as px
+from plotly.subplots import make_subplots
 import copy
 from functools import partial
 from skbio.stats import subsample_counts
@@ -1044,7 +1049,14 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
-        message = str(mpm.iat[0,0]) + ' ' + str(amp_matrix.columns[2])
+        message = str(amp_matrix.columns[2])
+        
+        mpm_plot = mpm.plot.bar(title= 'mpm', stacked=True)
+        
+        mpm_plot_html_flpth = os.path.join(self.run_dir, "mpm_plot.html")
+        plot(mpm_plot, filename=mpm_plot_html_flpth)
+
+        html_link = ('path': mpm_plot_html_flpth,'name': 'mpm_plot.html')
         #for i in amp_data:
             #row_ids += i
         #col_ids = amp_data['data']['col_ids']
@@ -1068,16 +1080,19 @@ class sourcetrackerV2:
         
         #output_html_files = _generate_html_report(self, self.output_dir)
         
-        #needs uuid imported
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': 'Proportion Tables ' + message},
-                                                'workspace_name': params['workspace_name']})
-        output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
-        }
-
+         report_client = KBaseReport(self.callback_url, token=self.token)
+               report_name = "SourceTracker_report_" + str(uuid.uuid4())
+               report_info = report_client.create_extended_report({
+                   'direct_html_link_index': 0,
+                   'html_links': [html_link],
+                   'report_object_name': report_name,
+                   'workspace_name': params['workspace_name']
+               })
+               output = {
+                   'report_ref': report_info['ref'],
+                   'report_name': report_info['name'],
+               }
+               
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...

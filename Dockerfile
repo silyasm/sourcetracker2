@@ -18,6 +18,8 @@ RUN python -m pip install --upgrade pip
 RUN pip install pandas
 RUN pip install numpy
 RUN pip install scikit-bio
+RUN pip install plotly
+RUN pip install uuid
 
 # add other packages you need
 # from GitHub install source tracker (if needed)
