@@ -1039,6 +1039,7 @@ class sourcetrackerV2:
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
+        amp_matrix = get_df(amp_data)
                 
         sinks = []
         sources = []
