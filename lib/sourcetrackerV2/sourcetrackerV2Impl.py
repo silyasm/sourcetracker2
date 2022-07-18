@@ -995,6 +995,19 @@ class sourcetrackerV2:
             #        fts = None
             
             return props, props_stds
+        
+        def get_df(associated_matrix_obj):
+        associated_matrix_obj = self.dfu.get_objects({'object_refs': [associated_matrix_obj_ref]})['data'][0]
+        
+        associated_matrix_data = associated_matrix_obj['data']
+        associated_matrix_name = associated_matrix_obj['info'][1]
+        
+        values = associated_matrix_data['data']['values']
+        row_ids = associated_matrix_data['data']['row_ids']
+        col_ids = associated_matrix_data['data']['col_ids']
+        associated_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
+        
+        return associated_matrix_df
 
         alpha1 = .01
         alpha2 = .001
@@ -1003,6 +1016,10 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
+        source_label = params.get('source_label')
+        sink_label = params.get('sink_label')
+        sample_type = params.get('sample_type')
+        amp_data = params.get('amplicon_matrix_ref')
 
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1021,15 +1038,14 @@ class sourcetrackerV2:
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        source_label = params.get('source_label')
-        sink_label = params.get('sink_label')
-        sample_type = params.get('sample_type')
-        amp_data = params.get('amplicon_matrix_ref')
+        
+        amp_matrix = get_df(amp_data)
+        
         sinks = []
         sources = []
         neither = []
         row_ids = ''
-        message = mpm.iat[0,0]
+        message = str(mpm.iat[0,0]) + '' + str(amp_matrix.iat[0,0])
         #for i in amp_data:
             #row_ids += i
         #col_ids = amp_data['data']['col_ids']
