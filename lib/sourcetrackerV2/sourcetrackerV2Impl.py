@@ -1067,10 +1067,8 @@ class sourcetrackerV2:
         message = str(amp_matrix.columns[2])
         
         mpm_html = mpm.to_html()
-        mpm_file = BeautifulSoup(mpm_html)
         
         amplicon_html = amp_matrix.to_html()
-        amplicon_file = BeautifulSoup(amplicon_html)
         
         #for i in amp_data:
             #row_ids += i
@@ -1106,10 +1104,10 @@ class sourcetrackerV2:
         'workspace_name': params['workspace_name'],
         'html_links':[],
             'direct_html_link_index': 0,
-            'direct_html': mpm_file,
+            'direct_html': mpm_html,
             'html_window_height': 333,
             'direct_html_link_index': 1,
-            'direct_html': amplicon_file,
+            'direct_html': amplicon_html,
             'html_window_height': 333,
         }
         
