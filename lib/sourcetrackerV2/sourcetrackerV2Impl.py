@@ -1004,7 +1004,7 @@ class sourcetrackerV2:
             values = matrix_obj['data']['values']
           
             # Make pandas DataFrame
-            df = pd.DataFrame(index=row_ids, columns=df_col_ids)
+            df = pd.DataFrame(index=row_ids, columns=col_ids)
         
             return df
 
