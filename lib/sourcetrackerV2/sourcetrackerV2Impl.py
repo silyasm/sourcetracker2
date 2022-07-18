@@ -1108,7 +1108,7 @@ class sourcetrackerV2:
         'html_links':[],
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
-            'html_window_height': 500g,
+            'html_window_height': 500,
             'direct_html_link_index': 1,
             'direct_html': amplicon_html,
             'html_window_height': 500,
