@@ -1079,7 +1079,7 @@ class sourcetrackerV2:
         report_params = {
         'message': message,
         'workspace_name': params['workspace_name'],
-        'html_links': ['Proportion Table': mpm_html],
+        'html_links': dict[],
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
             'html_window_height': 333,
