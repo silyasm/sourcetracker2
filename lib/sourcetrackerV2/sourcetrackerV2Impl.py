@@ -1013,19 +1013,19 @@ class sourcetrackerV2:
         
             return df
         
-        def _mkdir_p(self, path):
-        """
-        _mkdir_p: make directory for given path
-        """
-        if not path:
-            return
-        try:
-            os.makedirs(path)
-        except OSError as exc:
-            if exc.errno == errno.EEXIST and os.path.isdir(path):
-                pass
-            else:
-                raise
+        #def _mkdir_p(self, path):
+        #"""
+        #_mkdir_p: make directory for given path
+        #"""
+        #if not path:
+        #    return
+        #try:
+        #    os.makedirs(path)
+        #except OSError as exc:
+        #    if exc.errno == errno.EEXIST and os.path.isdir(path):
+        #        pass
+        #    else:
+        #        raised
 
         alpha1 = .01
         alpha2 = .001
@@ -1090,19 +1090,16 @@ class sourcetrackerV2:
         
         #output_html_files = _generate_html_report(self, self.output_dir)
         
-        output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
-        self._mkdir_p(output_directory)
-        result_file_path = os.path.join(output_directory, 'report.html')
+        #output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
+        #self._mkdir_p(output_directory)
+        #result_file_path = os.path.join(output_directory, 'report.html')
         
-        report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,'pack': 'zip'})['shock_id']
+        #report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,'pack': 'zip'})['shock_id']
         
         report_params = {
         'message': message,
         'workspace_name': params['workspace_name'],
-        'html_links': {'shock_id': report_shock_id,
-                       'name': os.path.basename(result_file_path),
-                       'label': os.path.basename(result_file_path),
-                       'description': 'HTML summary report for Source Tracker App'},
+        'html_links': {},
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
             'html_window_height': 333,
