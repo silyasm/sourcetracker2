@@ -997,13 +997,14 @@ class sourcetrackerV2:
             
             return props, props_stds
         
-        def get_df(amp_data):
-          row_ids = amp_data['data']['row_ids']
-          col_ids = amp_data['data']['col_ids']
-          values = amp_data['data']['values']
+        def get_df(amp_id, dfu):
+            matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
+            row_ids = amp_data['data']['row_ids']
+            col_ids = amp_data['data']['col_ids']
+            values = amp_data['data']['values']
           
-          # Make pandas DataFrame
-          df = pd.DataFrame(index=row_ids, columns=df_col_ids)
+            # Make pandas DataFrame
+            df = pd.DataFrame(index=row_ids, columns=df_col_ids)
         
         return df
 
@@ -1018,7 +1019,7 @@ class sourcetrackerV2:
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
-        matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
+        self.dfu = DataFileUtil(self.callback_url)
             
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1037,7 +1038,7 @@ class sourcetrackerV2:
         sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
 
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        amp_matrix = get_df(matrix_obj)
+        amp_matrix = get_df(amp_id, self.dfu)
                 
         sinks = []
         sources = []
