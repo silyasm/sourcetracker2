@@ -1045,7 +1045,7 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
-        message = str(mpm.iat[0,0]) + '' + str(amp_matrix.iat[0,0])
+        message = str(mpm.iat[0,0])
         #for i in amp_data:
             #row_ids += i
         #col_ids = amp_data['data']['col_ids']
