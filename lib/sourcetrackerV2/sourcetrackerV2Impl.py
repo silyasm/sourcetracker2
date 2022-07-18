@@ -1108,10 +1108,10 @@ class sourcetrackerV2:
         'html_links':[],
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
-            'html_window_height': 1000,
+            'html_window_height': 500g,
             'direct_html_link_index': 1,
             'direct_html': amplicon_html,
-            'html_window_height': 1000,
+            'html_window_height': 500,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
