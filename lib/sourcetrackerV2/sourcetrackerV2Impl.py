@@ -1070,6 +1070,8 @@ class sourcetrackerV2:
         
         amplicon_html = amp_matrix.to_html()
         
+        objects_created = [mpm_html, amplicon_html]
+        
         #for i in amp_data:
             #row_ids += i
         #col_ids = amp_data['data']['col_ids']
@@ -1101,14 +1103,15 @@ class sourcetrackerV2:
         
         report_params = {
         'message': message,
+        'objects_created': objects_created,
         'workspace_name': params['workspace_name'],
         'html_links':[],
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
-            'html_window_height': 333,
+            'html_window_height': 1000,
             'direct_html_link_index': 1,
             'direct_html': amplicon_html,
-            'html_window_height': 333,
+            'html_window_height': 1000,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
