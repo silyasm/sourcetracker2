@@ -1066,6 +1066,7 @@ class sourcetrackerV2:
         message = str(amp_matrix.columns[2])
         
         mpm_html = str(mpm.to_html())
+        amplicon_html = str(amp_matrix.to_html())
         
         #for i in amp_data:
             #row_ids += i
@@ -1099,9 +1100,12 @@ class sourcetrackerV2:
         report_params = {
         'message': message,
         'workspace_name': params['workspace_name'],
-        'html_links': {},
+        'html_links':[mpm_html, amplicon_html],
             'direct_html_link_index': 0,
             'direct_html': mpm_html,
+            'html_window_height': 333,
+            'direct_html_link_index': 1,
+            'direct_html': amplicon_html,
             'html_window_height': 333,
         }
         
