@@ -997,18 +997,18 @@ class sourcetrackerV2:
             
             return props, props_stds
         
-        def get_df(associated_matrix_obj):
-        associated_matrix_obj = self.dfu.get_objects({'object_refs': [associated_matrix_obj_ref]})['data'][0]
+        def get_df(amplicon matrix_ref):
+        amplicon_matrix_ref = self.dfu.get_objects({'object_refs': [amplicon_matrix_ref]})['data'][0]
         
-        associated_matrix_data = associated_matrix_obj['data']
-        associated_matrix_name = associated_matrix_obj['info'][1]
+        amplicon_matrix_data = amplicon_matrix_ref['data']
+        amplicon_matrix_name = amplicon_matrix_ref['info'][1]
         
-        values = associated_matrix_data['data']['values']
-        row_ids = associated_matrix_data['data']['row_ids']
-        col_ids = associated_matrix_data['data']['col_ids']
-        associated_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
+        values = amplicon_matrix_data['data']['values']
+        row_ids = amplicon_matrix_data['data']['row_ids']
+        col_ids = amplicon_matrix_data['data']['col_ids']
+        amplicon_matrix_df = pd.DataFrame(values, index=row_ids, columns=col_ids)
         
-        return associated_matrix_df
+        return amplicon_matrix_df
 
         alpha1 = .01
         alpha2 = .001
