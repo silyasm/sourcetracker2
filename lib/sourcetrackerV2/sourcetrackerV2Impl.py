@@ -998,8 +998,16 @@ class sourcetrackerV2:
             #        fts = None
             
             return props, props_stds
+            
+        def get_sample_dict(attributes, instances, sample_type):
+            for ind, d in enumerate(attributes):
+                if d['attribute'] == tax_field:
+                    break
+            #
+            sample_dict = {id: instance[ind] for id, instance in instances.items()}
+            return sample_dict
         
-        def get_df(amp_id, dfu):
+        def get_df(amp_id, sample_type, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
@@ -1007,8 +1015,17 @@ class sourcetrackerV2:
           
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=col_ids)
+            
+            # Get object
+            test_row_attributes_permanent_id = amp_id['row_attributemapping_ref']
+            obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
+            # row_attrmap_name = obj['data'][0]['info'][1]
+            attributes = obj['data'][0]['data']['attributes']
+            instances = obj['data'][0]['data']['instances']
+            #Generate sample_dict
+            sample_dict = get_sample_dict(attributes, instances, sample_type)
         
-            return df
+            return df, sample_dict
         
         def _mkdir_p(self, path):
             """
@@ -1146,21 +1163,7 @@ class sourcetrackerV2:
             source_df = amplicon_df.filter(items=source_list)
 
             return sink_df, source_df
-        
-        #def _mkdir_p(self, path):
-        #"""
-        #_mkdir_p: make directory for given path
-        #"""
-        #if not path:
-        #    return
-        #try:
-        #    os.makedirs(path)
-        #except OSError as exc:
-        #    if exc.errno == errno.EEXIST and os.path.isdir(path):
-        #        pass
-        #    else:
-        #        raised
-
+            
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -1174,7 +1177,7 @@ class sourcetrackerV2:
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
             
-        # example source otus
+        # example source otu data and sample dictionary
         sample1 = np.random.randint(0, 1000, size=50)
         sample2 = np.random.randint(0, 1000, size=50)
         sample3 = np.random.randint(0, 1000, size=50)
@@ -1195,11 +1198,16 @@ class sourcetrackerV2:
                        sample7 : 'sink',
                        sample8 : 'sink',
                        sample9 : 'sink',]
-                       
+        
+        #Make dataframe out of amplicon matrix file
+        amp_matrix, smpl_dict = get_df(amp_id, sample_type, self.dfu)
+
+        #Seperate Sink and Source samples into distinct dataframes
         sink_df, source_df = seperate_samples (sink_label, source_label, sample_dict, amp_df)
+        
+        #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        amp_matrix = get_df(amp_id, self.dfu)
-                
+        
         message = str(amp_matrix.columns[2])
         
         mpm_html = mpm.to_html()
