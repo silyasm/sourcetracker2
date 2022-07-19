@@ -1216,7 +1216,7 @@ class sourcetrackerV2:
         
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        amp_matrix = get_df(amp_id, self.dfu, sample_type)
+        #amp_matrix = get_df(amp_id, self.dfu, sample_type)
                 
         sinks = []
         sources = []
