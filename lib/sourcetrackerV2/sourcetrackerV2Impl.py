@@ -1232,8 +1232,8 @@ class sourcetrackerV2:
 
         report_output = {'report_name': output['name'],
                           'report_ref': output['ref']}
-        returnVal = output
-               
+                          
+        returnVal.update(report_output)
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...
