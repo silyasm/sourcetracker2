@@ -1182,7 +1182,7 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
-        message = str(amp_matrix.columns[2])
+        message = 'hello'
         
         mpm_html = mpm.to_html()
         
