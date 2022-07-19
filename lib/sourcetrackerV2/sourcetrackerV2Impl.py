@@ -1012,15 +1012,15 @@ class sourcetrackerV2:
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
             values = matrix_obj['data']['values']
-            attributes = matrix_obj['data']['attributes']
-            instances = matrix_obj['data']['instances']
+            #attributes = matrix_obj['data']['attributes']
+            #instances = matrix_obj['data']['instances']
           
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=col_ids)
             
-            id2sample = get_id2sample(attributes, instances, sample_field)
-            for row_ind in df.index:
-                df.loc[row_ind]['sample'] = id2sample[row_ind]
+            #id2sample = get_id2sample(attributes, instances, sample_field)
+            #for row_ind in df.index:
+            #    df.loc[row_ind]['sample'] = id2sample[row_ind]
         
             return df
         
