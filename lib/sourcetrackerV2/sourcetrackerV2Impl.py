@@ -1004,25 +1004,14 @@ class sourcetrackerV2:
             sample_dict = {id: instance[ind] for id, instance in instances.items()}
             return sample_dict
         
-        def get_df(amp_id, sample_type, dfu):
+        def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
-            col_ids = matrix_obj['data']['col_ids']
-            values = matrix_obj['data']['values']
           
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=col_ids)
-            
-            # Get object
-            test_row_attributes_permanent_id = amp_id['row_attributemapping_ref']
-            obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
-            # row_attrmap_name = obj['data'][0]['info'][1]
-            attributes = obj['data'][0]['data']['attributes']
-            instances = obj['data'][0]['data']['instances']
-            #Generate sample_dict
-            sample_dict = get_sample_dict(attributes, instances, sample_type)
         
-            return df, sample_dict
+            return df
         
         def _mkdir_p(self, path):
             """
@@ -1182,7 +1171,7 @@ class sourcetrackerV2:
                        sample9 : 'sink',]
         
         #Make dataframe out of amplicon matrix file
-        amp_matrix, smpl_dict = get_df(amp_id, sample_type, self.dfu)
+        amp_matrix = get_df(amp_id, self.dfu)
 
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
