@@ -1232,7 +1232,7 @@ class sourcetrackerV2:
 
         report_output = {'report_name': output['name'],
                           'report_ref': output['ref']}
-                          
+        returnVal = {}
         returnVal.update(report_output)
         #END run_sourcetrackerV2
 
