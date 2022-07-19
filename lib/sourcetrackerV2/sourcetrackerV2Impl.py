@@ -1183,8 +1183,8 @@ class sourcetrackerV2:
                 source_list.append(str(sample))
             else :
                 pass
-        sink_df = amplicon_df.filter(items=sink_list)
-        source_df = amplicon_df.filter(items=source_list)
+        sink_df = amp_df.filter(items=sink_list)
+        source_df = amp_df.filter(items=source_list)
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
