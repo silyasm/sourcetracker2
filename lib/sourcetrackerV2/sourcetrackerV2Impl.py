@@ -998,15 +998,29 @@ class sourcetrackerV2:
             #        fts = None
             
             return props, props_stds
+            
+        def get_id2sample(attributes, instances, tax_field):
+            for ind, d in enumerate(attributes):
+                if d['attribute'] == tax_field:
+                    break
+            
+            id2sample = {id: instance[ind] for id, instance in instances.items()}
+            return id2sample
         
-        def get_df(amp_id, dfu):
+        def get_df(amp_id, dfu, sample_field):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
             values = matrix_obj['data']['values']
+            attributes = matrix_obj['data']['attributes']
+            instances = matrix_obj['data']['instances']
           
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=col_ids)
+            
+            id2sample = get_id2sample(attributes, instances, sample_field)
+            for row_ind in df.index:
+                df.loc[row_ind]['sample'] = id2sample[row_ind]
         
             return df
         
@@ -1131,6 +1145,21 @@ class sourcetrackerV2:
                                 'description': 'HTML summary report for SourceTracker App'
                                 })
             return html_report
+            
+        def seperate_samples (sink_label, source_label, sample_dict, amplicon_df):
+            sink_list = []
+            source_list = []
+            for sample in sample_dict :
+                if sample[1] == sink_label :
+                    sink_list.append(str(sample))
+                if sample[1] == source_label :
+                    source_list.append(str(sample))
+                else :
+                    pass
+            sink_df = amplicon_df.filter(items=sink_list)
+            source_df = amplicon_df.filter(items=source_list)
+            
+            return sink_df, source_df
         
         #def _mkdir_p(self, path):
         #"""
@@ -1161,22 +1190,33 @@ class sourcetrackerV2:
             
         # example source otus
         otus = np.array(['o%s' % i for i in range(50)])
-        source1 = np.random.randint(0, 1000, size=50)
-        source2 = np.random.randint(0, 1000, size=50)
-        source3 = np.random.randint(0, 1000, size=50)
-        source_df = pd.DataFrame([source1, source2, source3], index=['source1', 'source2', 'source3'], columns=otus, dtype=np.int32)
-                
-        # example sink otus
-        sink1 = np.ceil(.5*source1+.5*source2)
-        sink2 = np.ceil(.5*source2+.5*source3)
-        sink3 = np.ceil(.5*source1+.5*source3)
-        sink4 = source1
-        sink5 = source2
-        sink6 = np.random.randint(0, 1000, size=50)
-        sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
+        sample1 = np.random.randint(0, 1000, size=50)
+        sample2 = np.random.randint(0, 1000, size=50)
+        sample3 = np.random.randint(0, 1000, size=50)
+        sample4 = np.ceil(.5*sample1+.5*sample2)
+        sample5 = np.ceil(.5*sample2+.5*sample3)
+        sample6 = np.ceil(.5*sample1+.5*sample3)
+        sample7 = sample1
+        sample8 = sample2
+        sample9 = np.random.randint(0, 1000, size=50)
+        amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=np.array(['sample%s' % i for i in range(1,10)]), columns=otus, dtype=np.int32)
+        
+        sample_dict = [sample1 : 'source',
+                       sample2 : 'source',
+                       sample3 : 'source',
+                       sample4 : 'sink',
+                       sample5 : 'sink',
+                       sample6 : 'sink',
+                       sample7 : 'sink',
+                       sample8 : 'sink',
+                       sample9 : 'sink',]
+            
 
+        sink_df, source_df = seperate_samples (sink_label, source_label, sample_dict, amp_df)
+        
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
-        amp_matrix = get_df(amp_id, self.dfu)
+        
+        amp_matrix = get_df(amp_id, self.dfu, sample_type)
                 
         sinks = []
         sources = []
@@ -1220,11 +1260,11 @@ class sourcetrackerV2:
         #report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,'pack': 'zip'})['shock_id']
         
         report_params = {
-        'message': message,
-        'workspace_name': params['workspace_name'],
-        'html_links': html_report,
-        'direct_html_link_index': 0,
-        'html_window_height': 333,
+            'message': message,
+            'workspace_name': params['workspace_name'],
+            #'html_links': html_report,
+            #'direct_html_link_index': 0,
+            #'html_window_height': 333,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
