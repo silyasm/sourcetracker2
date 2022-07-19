@@ -1147,7 +1147,8 @@ class sourcetrackerV2:
         sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
-        dfu = DataFileUtil(self.callback_url)
+        self.dfu = DataFileUtil(self.callback_url)
+        dfu = self.dfu
             
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
