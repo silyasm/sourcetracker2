@@ -1014,6 +1014,20 @@ class sourcetrackerV2:
             df = pd.DataFrame(index=row_ids, columns=col_ids)
         
             return df
+        
+        def _mkdir_p(self, path):
+            """
+            _mkdir_p: make directory for given path
+            """
+            if not path:
+                return
+            try:
+                os.makedirs(path)
+            except OSError as exc:
+                if exc.errno == errno.EEXIST and os.path.isdir(path):
+                    pass
+                else:
+                    raise
 
         def _build_table_content(self, output_directory, matrix_df):
             """
@@ -1082,7 +1096,7 @@ class sourcetrackerV2:
             <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Matrix Data</button>
             """
 
-            corr_table_content = self._build_table_content(output_directory, matrix_df)
+            corr_table_content = _build_table_content(output_directory, matrix_df)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
@@ -1100,9 +1114,10 @@ class sourcetrackerV2:
             html_report = list()
 
             output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+            _mkdir_p(output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = self._generate_visualization_content(output_directory, matrix_df)
+            visualization_content = _generate_visualization_content(output_directory, matrix_df)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
