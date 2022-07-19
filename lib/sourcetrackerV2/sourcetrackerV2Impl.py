@@ -58,9 +58,6 @@ class sourcetrackerV2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_sourcetrackerV2
-        #self.dfu = DataFileUtil(self.callback_url)
-        #sources = pd.DataFrame[()]
-        #sinks = pd.DataFrame[()]
         def validate_gibbs_input(sources, sinks=None):
             '''Validate `gibbs` inputs and coerce/round to type `np.int32`.
             Summary
