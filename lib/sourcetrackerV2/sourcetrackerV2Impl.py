@@ -1145,22 +1145,7 @@ class sourcetrackerV2:
                                 'description': 'HTML summary report for SourceTracker App'
                                 })
             return html_report
-            
-        def seperate_samples (sink_label, source_label, sample_dict, amplicon_df):
-            sink_list = []
-            source_list = []
-            for sample in sample_dict :
-                if sample_dict[sample] == sink_label :
-                    sink_list.append(str(sample))
-                if sample_dict[sample] == source_label :
-                    source_list.append(str(sample))
-                else :
-                    pass
-            sink_df = amplicon_df.filter(items=sink_list)
-            source_df = amplicon_df.filter(items=source_list)
-
-            return sink_df, source_df
-            
+                        
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -1168,8 +1153,8 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
-        source_label = params.get('source_label')
-        sink_label = params.get('sink_label')
+        source_label = str(params.get('source_label'))
+        sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
@@ -1200,7 +1185,17 @@ class sourcetrackerV2:
         amp_matrix, smpl_dict = get_df(amp_id, sample_type, self.dfu)
 
         #Seperate Sink and Source samples into distinct dataframes
-        sink_df, source_df = seperate_samples (sink_label, source_label, sample_dict, amp_df)
+        sink_list = []
+        source_list = []
+        for sample in sample_dict :
+            if sample_dict[sample] == sink_label :
+                sink_list.append(str(sample))
+            if sample_dict[sample] == source_label :
+                source_list.append(str(sample))
+            else :
+                pass
+        sink_df = amplicon_df.filter(items=sink_list)
+        source_df = amplicon_df.filter(items=source_list)
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
