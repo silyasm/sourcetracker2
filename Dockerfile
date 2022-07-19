@@ -20,7 +20,6 @@ RUN pip install numpy
 RUN pip install scikit-bio
 RUN pip install plotly
 RUN pip install uuid
-RUN pip install bs4
 
 # add other packages you need
 # from GitHub install source tracker (if needed)
