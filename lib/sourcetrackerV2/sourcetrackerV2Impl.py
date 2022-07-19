@@ -1114,7 +1114,7 @@ class sourcetrackerV2:
             html_report = list()
 
             output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
-            _mkdir_p(output_directory)
+            _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
             visualization_content = _generate_visualization_content(output_directory, matrix_df)
