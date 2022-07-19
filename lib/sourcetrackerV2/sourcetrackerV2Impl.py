@@ -1150,9 +1150,9 @@ class sourcetrackerV2:
             sink_list = []
             source_list = []
             for sample in sample_dict :
-                if sample[0] == sink_label :
+                if sample_dict[sample] == sink_label :
                     sink_list.append(str(sample))
-                if sample[0] == source_label :
+                if sample_dict[sample] == source_label :
                     source_list.append(str(sample))
                 else :
                     pass
