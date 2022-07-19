@@ -1007,6 +1007,7 @@ class sourcetrackerV2:
         def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
+            col_ids = matrix_obj['data']['col_ids']
           
             # Make pandas DataFrame
             df = pd.DataFrame(index=row_ids, columns=col_ids)
