@@ -1131,6 +1131,21 @@ class sourcetrackerV2:
                                 'description': 'HTML summary report for SourceTracker App'
                                 })
             return html_report
+            
+        def seperate_samples (sink_label, source_label, sample_dict, amplicon_df):
+            sink_list = []
+            source_list = []
+            for sample in sample_dict :
+                if sample[1] == sink_label :
+                    sink_list.append(str(sample))
+                if sample[1] == source_label :
+                    source_list.append(str(sample))
+                else :
+                    pass
+            sink_df = amplicon_df.filter(items=sink_list)
+            source_df = amplicon_df.filter(items=source_list)
+
+            return sink_df, source_df
         
         #def _mkdir_p(self, path):
         #"""
@@ -1160,71 +1175,43 @@ class sourcetrackerV2:
         self.dfu = DataFileUtil(self.callback_url)
             
         # example source otus
-        otus = np.array(['o%s' % i for i in range(50)])
-        source1 = np.random.randint(0, 1000, size=50)
-        source2 = np.random.randint(0, 1000, size=50)
-        source3 = np.random.randint(0, 1000, size=50)
-        source_df = pd.DataFrame([source1, source2, source3], index=['source1', 'source2', 'source3'], columns=otus, dtype=np.int32)
-                
-        # example sink otus
-        sink1 = np.ceil(.5*source1+.5*source2)
-        sink2 = np.ceil(.5*source2+.5*source3)
-        sink3 = np.ceil(.5*source1+.5*source3)
-        sink4 = source1
-        sink5 = source2
-        sink6 = np.random.randint(0, 1000, size=50)
-        sink_df = pd.DataFrame([sink1, sink2, sink3, sink4, sink5, sink6], index=np.array(['sink%s' % i for i in range(1,7)]), columns=otus, dtype=np.int32)
+        sample1 = np.random.randint(0, 1000, size=50)
+        sample2 = np.random.randint(0, 1000, size=50)
+        sample3 = np.random.randint(0, 1000, size=50)
+        sample4 = np.ceil(.5*sample1+.5*sample2)
+        sample5 = np.ceil(.5*sample2+.5*sample3)
+        sample6 = np.ceil(.5*sample1+.5*sample3)
+        sample7 = sample1
+        sample8 = sample2
+        sample9 = np.random.randint(0, 1000, size=50)
+        amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=np.array(['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9']), columns=otus, dtype=np.int32)
 
+        sample_dict = [sample1 : 'source',
+                       sample2 : 'source',
+                       sample3 : 'source',
+                       sample4 : 'sink',
+                       sample5 : 'sink',
+                       sample6 : 'sink',
+                       sample7 : 'sink',
+                       sample8 : 'sink',
+                       sample9 : 'sink',]
+                       
+        sink_df, source_df = seperate_samples (sink_label, source_label, sample_dict, amp_df)
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         amp_matrix = get_df(amp_id, self.dfu)
                 
-        sinks = []
-        sources = []
-        neither = []
-        row_ids = ''
         message = str(amp_matrix.columns[2])
         
         mpm_html = mpm.to_html()
-        
         amplicon_html = amp_matrix.to_html()
-        
         html_report = _generate_matrix_html_report(self, mpm)
         
-        #for i in amp_data:
-            #row_ids += i
-        #col_ids = amp_data['data']['col_ids']
-        #values = amp_data['data']['values']
-        
-        #column_ids = ''
-        #for i in col_ids
-            #column_ids += i
-
-        
-        
-        #for column in amplicon_matrix.columns:
-        #    if sample_types.at[column, 0] == params.get('sink_label'):
-        #        sink_column = amplicon_matrix.loc[:, column]
-        #        sinks.insert(0, sink_column)
-        #    if sample_types.at[column, 0] == params.get('source_label'):
-        #        source_column = amplicon_matrix.loc[:, column]
-        #        sources.insert(0, sink_column)
-        #    else:
-        #        raise.ValueError('The label' + column + 'does not match either sink nor source label')
-        
-        #output_html_files = _generate_html_report(self, self.output_dir)
-        
-        #output_directory = os.path.join(self.shared_folder, str(uuid.uuid4()))
-        #self._mkdir_p(output_directory)
-        #result_file_path = os.path.join(output_directory, 'report.html')
-        
-        #report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,'pack': 'zip'})['shock_id']
-        
         report_params = {
-        'message': message,
-        'workspace_name': params['workspace_name'],
-        'html_links': html_report,
-        'direct_html_link_index': 0,
-        'html_window_height': 333,
+            'message': message,
+            'workspace_name': params['workspace_name'],
+            'html_links': html_report,
+            'direct_html_link_index': 0,
+            'html_window_height': 333,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
