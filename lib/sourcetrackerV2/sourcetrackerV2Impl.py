@@ -1222,7 +1222,7 @@ class sourcetrackerV2:
         sources = []
         neither = []
         row_ids = ''
-        message = str(mpm.iat(0,3))
+        message = 'good morning'
         
         mpm_html = mpm.to_html()
         
