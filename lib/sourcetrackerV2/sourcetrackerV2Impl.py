@@ -1014,6 +1014,19 @@ class sourcetrackerV2:
             df = pd.DataFrame(index=row_ids, columns=col_ids)
         
             return df
+        def _mkdir_p(self, path):
+            """
+            _mkdir_p: make directory for given path
+            """
+            if not path:
+                return
+            try:
+                os.makedirs(path)
+            except OSError as exc:
+                if exc.errno == errno.EEXIST and os.path.isdir(path):
+                    pass
+                else:
+                    raise
         def _build_table_content(self, output_directory, matrix_df):
             """
             _build_table_content: generate HTML table content for FloatMatrix2D object
