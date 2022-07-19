@@ -1179,7 +1179,7 @@ class sourcetrackerV2:
         source_df = amp_df.loc[source_list]
         
         #Convert Amplicon matrix into df
-        amp_marix = get_df(amp_id, dfu)
+        amp_matrix = get_df(amp_id, dfu)
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
