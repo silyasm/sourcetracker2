@@ -5,11 +5,7 @@ import os
 import uuid
 import pandas as pd
 import numpy as np
-from plotly.offline import plot
-import plotly.graph_objs as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-from bs4 import BeautifulSoup
+import json
 import copy
 from functools import partial
 from skbio.stats import subsample_counts
