@@ -1151,8 +1151,8 @@ class sourcetrackerV2:
         beta = 10
         restarts = 5
         draws_per_restart = 1
-        burnin = 2
-        delay = 2
+        burnin = 3
+        delay = 3
         source_label = params.get('source_label')
         sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
