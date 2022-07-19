@@ -1013,6 +1013,113 @@ class sourcetrackerV2:
             df = pd.DataFrame(index=row_ids, columns=col_ids)
         
             return df
+        def _build_table_content(self, output_directory, matrix_df):
+            """
+            _build_table_content: generate HTML table content for FloatMatrix2D object
+            """
+
+            logging.info('Start generating table content page')
+
+            page_content = """\n"""
+
+            table_file_name = 'matrix_data_viewer_{}.html'.format(str(uuid.uuid4()))
+            data_file_name = 'matrix_data_{}.json'.format(str(uuid.uuid4()))
+
+            page_content += """<iframe height="900px" width="100%" """
+            page_content += """src="{}" """.format(table_file_name)
+            page_content += """style="border:none;"></iframe>\n"""
+
+            table_headers = matrix_df.columns.tolist()
+            table_content = """\n"""
+            # build header and footer
+            table_content += """\n<thead>\n<tr>\n"""
+            for table_header in table_headers:
+                table_content += """\n <th>{}</th>\n""".format(table_header)
+            table_content += """\n</tr>\n</thead>\n"""
+
+            table_content += """\n<tfoot>\n<tr>\n"""
+            for table_header in table_headers:
+                table_content += """\n <th>{}</th>\n""".format(table_header)
+            table_content += """\n</tr>\n</tfoot>\n"""
+
+            logging.info('start generating table json file')
+            data_array = matrix_df.values.tolist()
+
+            total_rec = len(data_array)
+            json_dict = {'draw': 1,
+                         'recordsTotal': total_rec,
+                         'recordsFiltered': total_rec,
+                         'data': data_array}
+
+            with open(os.path.join(output_directory, data_file_name), 'w') as fp:
+                json.dump(json_dict, fp)
+
+            logging.info('start generating table html')
+            with open(os.path.join(output_directory, table_file_name), 'w') as result_file:
+                with open(os.path.join(os.path.dirname(__file__), 'templates',
+                                       'matrix_table_viewer_template.html'),
+                          'r') as report_template_file:
+                    report_template = report_template_file.read()
+                    report_template = report_template.replace('<p>table_header</p>',
+                                                              table_content)
+                    report_template = report_template.replace('ajax_file_path',
+                                                              data_file_name)
+                    report_template = report_template.replace('deferLoading_size',
+                                                              str(total_rec))
+                    result_file.write(report_template)
+
+            return page_content
+
+        def _generate_visualization_content(self, output_directory, matrix_df):
+
+            tab_def_content = ''
+            tab_content = ''
+
+            tab_def_content += """\n<div class="tab">\n"""
+            tab_def_content += """
+            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Matrix Data</button>
+            """
+
+            corr_table_content = self._build_table_content(output_directory, matrix_df)
+            tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
+                                                                                    corr_table_content)
+
+            tab_def_content += """\n</div>\n"""
+
+            return tab_def_content + tab_content
+
+        def _generate_matrix_html_report(self, matrix_df):
+
+            """
+            _generate_matrix_html_report: generate html summary report for matrix
+            """
+
+            logging.info('Start generating html report')
+            html_report = list()
+
+            output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+            self._mkdir_p(output_directory)
+            result_file_path = os.path.join(output_directory, 'matrix_report.html')
+
+            visualization_content = self._generate_visualization_content(output_directory, matrix_df)
+
+            with open(result_file_path, 'w') as result_file:
+                with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
+                          'r') as report_template_file:
+                    report_template = report_template_file.read()
+                    report_template = report_template.replace('<p>Visualization_Content</p>',
+                                                              visualization_content)
+                    result_file.write(report_template)
+
+            report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,
+                                                      'pack': 'zip'})['shock_id']
+
+            html_report.append({'shock_id': report_shock_id,
+                                'name': os.path.basename(result_file_path),
+                                'label': os.path.basename(result_file_path),
+                                'description': 'HTML summary report for SourceTracker App'
+                                })
+            return html_report
         
         #def _mkdir_p(self, path):
         #"""
@@ -1070,7 +1177,7 @@ class sourcetrackerV2:
         
         amplicon_html = amp_matrix.to_html()
         
-        objects_created = [mpm_html, amplicon_html]
+        html_report = _generate_matrix_html_report(self, mpm)
         
         #for i in amp_data:
             #row_ids += i
@@ -1103,15 +1210,10 @@ class sourcetrackerV2:
         
         report_params = {
         'message': message,
-        'objects_created': objects_created,
         'workspace_name': params['workspace_name'],
-        'html_links':[],
-            'direct_html_link_index': 0,
-            'direct_html': mpm_html,
-            'html_window_height': 500,
-            'direct_html_link_index': 1,
-            'direct_html': amplicon_html,
-            'html_window_height': 500,
+        'html_links': html_report,
+        'direct_html_link_index': 0,
+        'html_window_height': 333,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
