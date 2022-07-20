@@ -1244,7 +1244,7 @@ class sourcetrackerV2:
             'message': '',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
-            'html_links': [html_report],
+            'html_links': html_report,
             'direct_html_link_index': 0,
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
