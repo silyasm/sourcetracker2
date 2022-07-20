@@ -1246,7 +1246,7 @@ class sourcetrackerV2:
             'html_links': html_report,
             'direct_html_link_index': 0,
             'html_window_height': 666,
-            'report_object_name': 'kb_mds_report_' + str(uuid.uuid4())
+            'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
