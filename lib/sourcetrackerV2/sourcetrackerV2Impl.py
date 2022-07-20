@@ -1203,11 +1203,8 @@ class sourcetrackerV2:
         output = kbase_report_client.create_extended_report(report_params)
 
         report_output = {'report_name': output['name'],
-                        'report_ref': output['ref'],
-                        'report_message': output['message'].
-                        'report_html_links': output['html_links']}
-        returnVal = {}
-        returnVal.update(report_output)
+                        'report_ref': output['ref']}
+        
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...
