@@ -1189,9 +1189,8 @@ class sourcetrackerV2:
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
-        PARAM_OUT_MATRIX = 'st_matrix_name'
-        st_matrix_name = params.get(self.PARAM_OUT_MATRIX)
-            
+        st_matrix_name = params.get('st_matrix_name')
+        
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
         sample1 = np.random.randint(0, 1000, size=50)
