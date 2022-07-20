@@ -6,8 +6,8 @@
     "contact": "",
     "categories": ["active"],
     "widgets": {
-        "input": null,
-        "output": null
+        "input": "kbaseNarrativeMethodInput",
+        "output": "no-display"
     },
     "parameters": [ 
         {
@@ -145,8 +145,8 @@
                     "target_property": "report_ref"
                 },
                 {
-                    "narrative_system_variable": "workspace",
-                    "target_property": "workspace_id"
+                     "constant_value": "16",
+                     "target_property": "report_window_line_height"
                 }
             ]
         }

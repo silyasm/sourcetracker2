@@ -1135,6 +1135,32 @@ class sourcetrackerV2:
                                 'description': 'HTML summary report for SourceTracker App'
                                 })
             return html_report
+            
+        def _save_proportion_matrix(dfu, workspace_name, mpm, mps):
+
+            logging.info('Saving MDSMatrix...')
+
+            if not isinstance(workspace_name, int):
+                ws_name_id = dfu.ws_name_to_id(workspace_name)
+            else:
+                ws_name_id = workspace_name
+
+            st_data = {}
+
+            st_data.update({'proportion_matrix': self._df_to_list(mpm)})
+            st_data.update({'proportion_matrix_stdev': self._df_to_list(mps)})
+
+            obj_type = 'KBaseExperiments.PCAMatrix'
+            info = self.dfu.save_objects({
+                "id": ws_name_id,
+                "objects": [{
+                    "type": obj_type,
+                    "data": st_data,
+                    "name": st_matrix_name
+                }]
+            })[0]
+
+            return "%s/%s/%s" % (info[6], info[0], info[4])
                         
         alpha1 = .01
         alpha2 = .001
@@ -1149,6 +1175,7 @@ class sourcetrackerV2:
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
+        workspace_name = params['workspace_name']
             
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1186,7 +1213,10 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        message = str(amp_matrix.columns[2])
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, mpm, mps)
+        return_val = {'sourcetracker_ref': sourcetracker_ref}
+        objects_created = list()
+        objects_created.append({'ref': sourcetracker_ref,'description': 'MDS Matrix'})
         
         mpm_html = mpm.to_html()
         amplicon_html = amp_matrix.to_html()
@@ -1195,9 +1225,11 @@ class sourcetrackerV2:
         report_params = {
             'message': message,
             'workspace_name': params['workspace_name'],
+            'objects_created': objects_created,
             'html_links': html_report,
             'direct_html_link_index': 0,
             'html_window_height': 666,
+            'report_object_name': 'kb_mds_report_' + str(uuid.uuid4())
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
