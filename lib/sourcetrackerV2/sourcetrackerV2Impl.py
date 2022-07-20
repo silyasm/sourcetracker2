@@ -1169,7 +1169,7 @@ class sourcetrackerV2:
                 "objects": [{
                     "type": obj_type,
                     "data": st_data,
-                    "name": st_matrix_name
+                    "name": 'st_matrix_name'
                 }]
             })[0]
 
