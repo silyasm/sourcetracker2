@@ -64,6 +64,14 @@ parameters :
             Sort ascending vs. descending
         long-hint: |
             Sort ascending vs. descending
+    st_matrix_name:
+        ui-name: |
+            Proportion Matrix Object Name
+        short-hint : |
+            Output Proportion Matrix object name
+        long-hint  : |
+            Output Proportion Matrix object name
+
 description : |
     <h3>Description: </h3>
     <p>Source Tracker, first introduced by Dan Knights in a 2011 paper (Knights et al. 2011), evaluates the relative bacterial contributions of source environments to microbial sink communities from 16S rRNA bacterial genomic sequence data. Unlike Naïve Bayes and Random Forrest, Source Tracker uses an algorithm called Latent Dirichlet Allocation, to assign sink OTU or ASV sequences to given source environments but remains accurate when contaminants of an unknown source are introduced. In short, the software uses Gibbs sampling to randomly assign sources to each sequence before reassigning sources based on the frequency data for each OTU or ASV. To learn more about the theory behind Source Tarcker, visit this Jupyter notebook. Source Tracker has been utilized and evaluated in numerous publications (Henry et al. 2016; Newton et al. 2013; Staley et al. 2018) many of which have assessed contamination in water treatment. In these studies, researchers were able to identify and compare the proportion of microbial contamination in water treatment locations along with the proportion of bacteria from known sources.</p>

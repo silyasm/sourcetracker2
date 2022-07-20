@@ -1189,7 +1189,7 @@ class sourcetrackerV2:
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
-        st_matrix_name = params.get('st_matrix_name')
+        st_matrix_name = params['st_matrix_name']
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
