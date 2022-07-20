@@ -1149,7 +1149,7 @@ class sourcetrackerV2:
                            'values': df.values.tolist()}
             return matrix_data
             
-        def _save_proportion_matrix(dfu, workspace_name, mpm, mps):
+        def _save_proportion_matrix(dfu, workspace_name, mpm, mps, st_matrix_name):
 
             logging.info('Saving MDSMatrix...')
 
@@ -1169,7 +1169,7 @@ class sourcetrackerV2:
                 "objects": [{
                     "type": obj_type,
                     "data": st_data,
-                    "name": 'st_matrix_name'
+                    "name": st_matrix_name
                 }]
             })[0]
 
@@ -1189,6 +1189,8 @@ class sourcetrackerV2:
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
+        PARAM_OUT_MATRIX = 'st_matrix_name'
+        st_matrix_name = params.get(self.PARAM_OUT_MATRIX)
             
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1226,7 +1228,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, mpm, mps)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'MDS Matrix'})
