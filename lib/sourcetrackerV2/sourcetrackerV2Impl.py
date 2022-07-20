@@ -1151,7 +1151,7 @@ class sourcetrackerV2:
                            'values': df.values.tolist()}
             return matrix_data
             
-        def _save_proportion_matrix(dfu, workspace_name, mpm, mps, st_matrix_name):
+        def _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name):
 
             logging.info('Saving MDSMatrix...')
 
@@ -1164,9 +1164,9 @@ class sourcetrackerV2:
 
             st_data.update({'proportion_matrix': _df_to_list(mpm)})
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
-            st_data.update({'rotation_matrix': _df_to_list(mpm)})
+            st_data.update({'rotation_matrix': _df_to_list(amp_matrix)})
 
-            obj_type = 'KBaseMatrices'
+            obj_type = 'KBaseExperiments.PCAMatrix'
             info = dfu.save_objects({
                 "id": ws_name_id,
                 "objects": [{
@@ -1232,7 +1232,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
