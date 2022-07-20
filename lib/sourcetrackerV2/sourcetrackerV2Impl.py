@@ -1136,7 +1136,7 @@ class sourcetrackerV2:
                                 })
             return html_report
             
-        def _df_to_list(self, df):
+        def _df_to_list(df):
             """
             _df_to_list: convert Dataframe to FloatMatrix2D matrix data
             """
