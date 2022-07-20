@@ -1240,7 +1240,7 @@ class sourcetrackerV2:
         html_report = _generate_matrix_html_report(self, mpm)
         
         report_params = {
-            'message': message,
+            'message': '',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
