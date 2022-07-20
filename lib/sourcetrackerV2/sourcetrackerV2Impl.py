@@ -1194,10 +1194,10 @@ class sourcetrackerV2:
         
         report_params = {
             'message': message,
-            'workspace_name': params['workspace_name'],
+            'workspace_id': params['workspace_id'],
             'html_links': html_report,
             'direct_html_link_index': 0,
-            'html_window_height': 333,
+            'html_window_height': 666,
         }
         
         kbase_report_client = KBaseReport(self.callback_url)
