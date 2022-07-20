@@ -146,6 +146,9 @@
                 {
                   "input_parameter" : "ascending",
                   "target_property" : "ascending"
+                },{
+                    "input_parameter" : "st_matrix_name",
+                    "target_property" : "st_matrix_name"
                 }
             ],
             "output_mapping": [
