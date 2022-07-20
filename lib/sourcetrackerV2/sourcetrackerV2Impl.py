@@ -1136,6 +1136,19 @@ class sourcetrackerV2:
                                 })
             return html_report
             
+        def _df_to_list(self, df):
+            """
+            _df_to_list: convert Dataframe to FloatMatrix2D matrix data
+            """
+
+            df.index = df.index.astype('str')
+            df.columns = df.columns.astype('str')
+            df.fillna(0, inplace=True)
+            matrix_data = {'row_ids': df.index.tolist(),
+                           'col_ids': df.columns.tolist(),
+                           'values': df.values.tolist()}
+            return matrix_data
+            
         def _save_proportion_matrix(dfu, workspace_name, mpm, mps):
 
             logging.info('Saving MDSMatrix...')
@@ -1147,8 +1160,8 @@ class sourcetrackerV2:
 
             st_data = {}
 
-            st_data.update({'proportion_matrix': self._df_to_list(mpm)})
-            st_data.update({'proportion_matrix_stdev': self._df_to_list(mps)})
+            st_data.update({'proportion_matrix': _df_to_list(mpm)})
+            st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
             info = self.dfu.save_objects({
