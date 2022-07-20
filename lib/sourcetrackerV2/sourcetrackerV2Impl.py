@@ -1031,7 +1031,7 @@ class sourcetrackerV2:
                 else:
                     raise
 
-        def _build_table_content(self, output_directory, matrix_df):
+        def _build_table_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks):
             """
             _build_table_content: generate HTML table content for FloatMatrix2D object
             """
@@ -1061,7 +1061,11 @@ class sourcetrackerV2:
             table_content += """\n</tr>\n</tfoot>\n"""
 
             logging.info('start generating table json file')
-            data_array = matrix_df.values.tolist()
+            values_list = matrix_df.values.tolist()
+            sinks_list = matrix_df.index.tolist()
+            for i in number_of_sinks :
+                values_list.insert(number_of_sources*i, sinks_list[i])
+            data_array = values_list
 
             total_rec = len(data_array)
             json_dict = {'draw': 1,
@@ -1088,7 +1092,7 @@ class sourcetrackerV2:
 
             return page_content
 
-        def _generate_visualization_content(self, output_directory, matrix_df):
+        def _generate_visualization_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks):
 
             tab_def_content = ''
             tab_content = ''
@@ -1098,7 +1102,7 @@ class sourcetrackerV2:
             <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Matrix Data</button>
             """
 
-            corr_table_content = _build_table_content(self, output_directory, matrix_df)
+            corr_table_content = _build_table_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
@@ -1106,7 +1110,7 @@ class sourcetrackerV2:
 
             return tab_def_content + tab_content
 
-        def _generate_matrix_html_report(self, matrix_df):
+        def _generate_matrix_html_report(self, matrix_df, number_of_sources, number_of_sinks):
 
             """
             _generate_matrix_html_report: generate html summary report for matrix
@@ -1119,7 +1123,7 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_visualization_content(self, output_directory, matrix_df)
+            visualization_content = _generate_visualization_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
@@ -1216,11 +1220,15 @@ class sourcetrackerV2:
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
         source_list = []
+        number_of_sinks = 0
+        number_of_sources = 1
         for sample in sample_dict :
             if sample_dict[sample] == 'sink' :
                 sink_list.append(sample)
+                number_of_sinks += 1
             if sample_dict[sample] == 'source' :
                 source_list.append(sample)
+                number_of_sinks += 1
             else :
                 pass
         sink_df = amp_df.loc[sink_list]
@@ -1237,7 +1245,7 @@ class sourcetrackerV2:
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        html_report = _generate_matrix_html_report(self, mpm)
+        html_report = _generate_matrix_html_report(self, mpm, number_of_sources, number_of_sinks)
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
