@@ -1164,7 +1164,7 @@ class sourcetrackerV2:
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
-            info = self.dfu.save_objects({
+            info = dfu.save_objects({
                 "id": ws_name_id,
                 "objects": [{
                     "type": obj_type,
