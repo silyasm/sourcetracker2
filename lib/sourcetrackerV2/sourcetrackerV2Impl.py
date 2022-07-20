@@ -42,8 +42,10 @@ class sourcetrackerV2:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.shared_folder = config['scratch']
         self.scratch = config['scratch']
+        self.token = os.environ['KB_AUTH_TOKEN']
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
+
         #END_CONSTRUCTOR
         pass
 
@@ -1233,24 +1235,20 @@ class sourcetrackerV2:
         sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
-        objects_created.append({'ref': sourcetracker_ref,'description': 'MDS Matrix'})
+        objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        mpm_html = mpm.to_html()
-        amplicon_html = amp_matrix.to_html()
         html_report = _generate_matrix_html_report(self, mpm)
         
-        report_params = {
+        report_client = KBaseReport(self.callback_url, token=self.token)
+        output = kbase_report_client.create_extended_report({
             'message': '',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
-            'html_links': html_report,
+            'html_links': [html_report],
             'direct_html_link_index': 0,
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
-        }
-        
-        kbase_report_client = KBaseReport(self.callback_url)
-        output = kbase_report_client.create_extended_report(report_params)
+        })
 
         report_output = {'report_name': output['name'],
                         'report_ref': output['ref']}
