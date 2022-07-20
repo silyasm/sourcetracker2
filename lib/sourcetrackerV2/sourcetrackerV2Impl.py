@@ -1010,9 +1010,10 @@ class sourcetrackerV2:
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
+            values = matrix_obj['data']['values']
           
             # Make pandas DataFrame
-            df = pd.DataFrame(index=row_ids, columns=col_ids)
+            df = pd.DataFrame(values, index=row_ids, columns=col_ids)
         
             return df
         
@@ -1164,7 +1165,7 @@ class sourcetrackerV2:
 
             st_data.update({'proportion_matrix': _df_to_list(mpm)})
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
-            st_data.update({'rotation_matrix': _df_to_list(amp_matrix)})
+            st_data.update({'amplicon_matrix': _df_to_list(amp_matrix)})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
             info = dfu.save_objects({
@@ -1227,7 +1228,6 @@ class sourcetrackerV2:
         
         #Convert Amplicon matrix into df and transpose
         amp_matrix = get_df(amp_id, dfu)
-        amp_matrix_transposed = amp_matrix.T
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
