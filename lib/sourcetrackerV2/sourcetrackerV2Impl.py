@@ -1162,6 +1162,7 @@ class sourcetrackerV2:
 
             st_data.update({'proportion_matrix': _df_to_list(mpm)})
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
+            st_data.update({'rotation_matrix': _df_to_list(mpm)})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
             info = dfu.save_objects({
@@ -1191,6 +1192,7 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
+        
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
