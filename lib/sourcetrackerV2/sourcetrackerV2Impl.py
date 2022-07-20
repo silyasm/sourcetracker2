@@ -1189,7 +1189,8 @@ class sourcetrackerV2:
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
-        st_matrix_name = params['st_matrix_name']
+        PARAM_OUT_MATRIX = 'st_matrix_name'
+        st_matrix_name = params.get(PARAM_OUT_MATRIX)
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1251,7 +1252,8 @@ class sourcetrackerV2:
 
         report_output = {'report_name': output['name'],
                         'report_ref': output['ref']}
-        
+                        
+        returnVal = return_val.update(report_output)
         #END run_sourcetrackerV2
 
         # At some point might do deeper type checking...

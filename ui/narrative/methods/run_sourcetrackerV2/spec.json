@@ -22,18 +22,6 @@
           }
         },
         {
-            "id" : "st_matrix_name",
-            "optional" : false,
-            "advanced" : false,
-            "allow_multiple" : false,
-            "default_values" : [ "" ],
-            "field_type" : "text",
-            "text_options" : {
-              "valid_ws_types" : ["KBaseExperiments.PCAMatrix"],
-              "is_output_name" : true
-            }
-        },
-        {
           "id": "sample_type",
           "optional": false,
           "advanced": false,
@@ -107,6 +95,18 @@
             "checked_value": 1,
             "unchecked_value": 0
           }
+        },
+        {
+            "id" : "st_matrix_name",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {
+              "valid_ws_types" : ["KBaseMatrices"],
+              "is_output_name" : true
+            }
         }
     ],
     "behavior": {
