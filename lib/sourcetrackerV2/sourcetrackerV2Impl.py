@@ -1239,7 +1239,7 @@ class sourcetrackerV2:
         
         html_report = _generate_matrix_html_report(self, mpm)
         
-        report_client = KBaseReport(self.callback_url, token=self.token)
+        kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
             'message': '',
             'workspace_name': params['workspace_name'],
