@@ -1194,15 +1194,14 @@ class sourcetrackerV2:
         delay = 2
         source_label = str(params.get('source_label'))
         sink_label = str(params.get('sink_label'))
-        sample_type = params.get('sample_type')
-        type_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
-        amp_id = params['amplicon_matrix_ref']
+        amp_id = params['amplicon_matrix_ref'
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        
+        sample_type = params.get('sample_type')
+        type_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
