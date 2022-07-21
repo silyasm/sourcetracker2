@@ -1006,7 +1006,7 @@ class sourcetrackerV2:
             sample_dict = {id: instance[ind] for id, instance in instances.items()}
             return sample_dict
         
-        def get_df(amp_id, dfu, sample_type):
+        def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
@@ -1015,14 +1015,14 @@ class sourcetrackerV2:
             # Make pandas DataFrame
             df = pd.DataFrame(values, index=row_ids, columns=col_ids)
             
-            test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
-            obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})['data'][0]['data']
+            #test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
+            #obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})['data'][0]['data']
             # row_attrmap_name = obj['data'][0]['info'][1]
-            attributes = obj['data']['attributes']
-            instances = obj['data']['instances']
-            sample_dict = get_sample_dict(attributes, instances, sample_type)
+            #attributes = obj['data']['attributes']
+            #instances = obj['data']['instances']
+            #sample_dict = get_sample_dict(attributes, instances, sample_type)
         
-            return df, sample_dict
+            return df
         
         def _mkdir_p(self, path):
             """
@@ -1245,7 +1245,7 @@ class sourcetrackerV2:
         sink_df, source_df = sort_samples (sample_dict, amp_df)
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu, sample_type)
+        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu)
         amp_matrix = amp_matrix1.T
         
         #Complete SourceTracker
