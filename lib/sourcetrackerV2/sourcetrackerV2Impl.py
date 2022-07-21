@@ -1014,8 +1014,15 @@ class sourcetrackerV2:
           
             # Make pandas DataFrame
             df = pd.DataFrame(values, index=row_ids, columns=col_ids)
+            
+            test_row_attributes_permanent_id = amp_data['row_attributemapping_ref']
+            obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
+            # row_attrmap_name = obj['data'][0]['info'][1]
+            attributes = obj['data'][0]['data']['attributes']
+            instances = obj['data'][0]['data']['instances']
+            sample_dict = get_sample_dict(attributes, instances, sample_type)
         
-            return df
+            return df, sample_dict
         
         def _mkdir_p(self, path):
             """
@@ -1184,6 +1191,25 @@ class sourcetrackerV2:
             })[0]
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
+        
+        def sort_samples (sample_dict, amp_df, sink_label, source_label) :
+            #Seperate Sink and Source samples into distinct dataframes
+            sink_list = []
+            source_list = []
+            number_of_sinks = 0
+            number_of_sources = 1
+            for sample in sample_dict :
+                if sample_dict[sample] == sink_label :
+                    sink_list.append(sample)
+                    number_of_sinks += 1
+                if sample_dict[sample] == source_label :
+                    source_list.append(sample)
+                    number_of_sinks += 1
+                else :
+                    pass
+            sink_df = amp_df.loc[sink_list]
+            source_df = amp_df.loc[source_list]
+            return sink_df, source_df
                         
         alpha1 = .01
         alpha2 = .001
@@ -1200,8 +1226,6 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        sample_type = params.get('sample_type')
-        type_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1217,26 +1241,11 @@ class sourcetrackerV2:
         amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
         
         sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
-
-        #Seperate Sink and Source samples into distinct dataframes
-        sink_list = []
-        source_list = []
-        number_of_sinks = 0
-        number_of_sources = 1
-        for sample in sample_dict :
-            if sample_dict[sample] == 'sink' :
-                sink_list.append(sample)
-                number_of_sinks += 1
-            if sample_dict[sample] == 'source' :
-                source_list.append(sample)
-                number_of_sinks += 1
-            else :
-                pass
-        sink_df = amp_df.loc[sink_list]
-        source_df = amp_df.loc[source_list]
+        
+        sink_df, source_df = sort_samples (sample_dict, amp_df, sink_label, source_label)
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1 = get_df(amp_id, dfu)
+        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu)
         amp_matrix = amp_matrix1.T
         
         #Complete SourceTracker
@@ -1251,7 +1260,7 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': str(type_obj),
+            'message': str(sample_dict),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
