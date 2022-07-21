@@ -1251,7 +1251,7 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': str(sample_type),
+            'message': str(sample_type['data']['row_ids']),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
