@@ -1048,6 +1048,8 @@ class sourcetrackerV2:
             page_content += """style="border:none;"></iframe>\n"""
 
             table_headers = matrix_df.columns.tolist()
+            table_headers.insert(0, '')
+            
             table_content = """\n"""
             # build header and footer
             table_content += """\n<thead>\n<tr>\n"""
