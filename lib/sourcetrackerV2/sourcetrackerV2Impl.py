@@ -1215,8 +1215,7 @@ class sourcetrackerV2:
         sample8 = sample2
         sample9 = np.random.randint(0, 1000, size=50)
         amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
-        print(amp_df)
-
+        
         sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
 
         #Seperate Sink and Source samples into distinct dataframes
@@ -1236,8 +1235,10 @@ class sourcetrackerV2:
         sink_df = amp_df.loc[sink_list]
         source_df = amp_df.loc[source_list]
         
-        #Convert Amplicon matrix into df and transpose
+        #Convert Amplicon matrix into df and split
         amp_matrix = get_df(amp_id, dfu)
+        source_df = amp_matrix.iloc(:(len(amp_matrix.columns)/2))
+        sink_df = amp_matrix.iloc((len(amp_matrix.columns)/2):(len(amp_matrix.columns)))
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
