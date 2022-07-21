@@ -1015,14 +1015,14 @@ class sourcetrackerV2:
             # Make pandas DataFrame
             df = pd.DataFrame(values, index=row_ids, columns=col_ids)
             
-            test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
-            obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
+            #test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
+            #obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
             # row_attrmap_name = obj['data'][0]['info'][1]
-            attributes = obj['data'][0]['attributes']
-            instances = obj['data'][0]['instances']
-            sample_dict = get_sample_dict(attributes, instances, sample_type)
+            #attributes = obj['data'][0]['attributes']
+            #instances = obj['data'][0]['instances']
+            #sample_dict = get_sample_dict(attributes, instances, sample_type)
         
-            return df, sample_dict
+            return df
         
         def _mkdir_p(self, path):
             """
@@ -1246,7 +1246,7 @@ class sourcetrackerV2:
         sink_df, source_df = sort_samples(sample_dict, amp_df)
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu, sample_dict)
+        amp_matrix1 = get_df(amp_id, dfu, sample_dict)
         amp_matrix = amp_matrix1.T
         
         #Complete SourceTracker
@@ -1261,10 +1261,10 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': amp_sample_dict,
+            'message': 'Source Tracker Report',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
-            'html_links': html_report,
+            'html_links': html_report,g
             'direct_html_link_index': 0,
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
