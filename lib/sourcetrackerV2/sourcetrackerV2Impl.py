@@ -1237,8 +1237,6 @@ class sourcetrackerV2:
         
         #Convert Amplicon matrix into df and split
         amp_matrix = get_df(amp_id, dfu)
-        source_df = amp_matrix.iloc(:(len(amp_matrix.columns)/2))
-        sink_df = amp_matrix.iloc((len(amp_matrix.columns)/2):(len(amp_matrix.columns)))
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
@@ -1248,7 +1246,7 @@ class sourcetrackerV2:
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        html_report = _generate_matrix_html_report(self, mpm, number_of_sources, number_of_sinks)
+        html_report = _generate_matrix_html_report(self, amp_matrix, number_of_sources, number_of_sinks)
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
