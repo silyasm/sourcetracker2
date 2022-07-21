@@ -1019,8 +1019,7 @@ class sourcetrackerV2:
             obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
             # row_attrmap_name = obj['data'][0]['info'][1]
             attributes = obj['data'][0]['data']['attributes']
-            instances = obj['data'][0]['data']['instances']
-            sample_dict = get_sample_dict(attributes, instances, sample_type)
+            sample_dict = attributes
         
             return df, sample_dict
         
