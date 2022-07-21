@@ -1016,10 +1016,11 @@ class sourcetrackerV2:
             df = pd.DataFrame(values, index=row_ids, columns=col_ids)
             
             test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
-            obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
+            obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})['data'][0]['data']
             # row_attrmap_name = obj['data'][0]['info'][1]
-            attributes = obj['attributes']
-            sample_dict = attributes
+            attributes = obj['data']['attributes']
+            instances = obj['data']['instances']
+            sample_dict = get_sample_dict(attributes, instances, sample_type)
         
             return df, sample_dict
         
