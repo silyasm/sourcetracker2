@@ -1201,7 +1201,8 @@ class sourcetrackerV2:
         delay = 2
         source_label = str(params.get('source_label'))
         sink_label = str(params.get('sink_label'))
-        amp_id = params['amplicon_matrix_ref'
+        amp_id = params['amplicon_matrix_ref']
+        sample_type = params['sample_type']
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
@@ -1241,7 +1242,7 @@ class sourcetrackerV2:
         source_df = amp_df.loc[source_list]
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1 = get_df(amp_id, dfu, sample_dict)
+        amp_matrix1 = get_df(amp_id, dfu, sample_type)
         amp_matrix = amp_matrix1.T
         
         #Complete SourceTracker
