@@ -1015,8 +1015,8 @@ class sourcetrackerV2:
             # Make pandas DataFrame
             df = pd.DataFrame(values, index=row_ids, columns=col_ids)
             
-            test_row_attributes_permanent_id = amp_id['sample_type']
-            obj = dfu.get_objects({'object_refs': [test_row_attributes_permanent_id]})
+            test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
+            obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
             # row_attrmap_name = obj['data'][0]['info'][1]
             attributes = obj['data'][0]['data']['attributes']
             instances = obj['data'][0]['data']['instances']
