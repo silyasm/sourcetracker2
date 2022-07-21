@@ -1195,6 +1195,7 @@ class sourcetrackerV2:
         source_label = str(params.get('source_label'))
         sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
+        type_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
@@ -1251,7 +1252,7 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': str(sample_type['data']['row_ids']),
+            'message': str(type_obj),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
