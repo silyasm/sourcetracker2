@@ -1192,17 +1192,17 @@ class sourcetrackerV2:
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
         
-        def sort_samples (sample_dict, amp_df, sink_label, source_label) :
+        def sort_samples (sample_dict, amp_df) :
             #Seperate Sink and Source samples into distinct dataframes
             sink_list = []
             source_list = []
             number_of_sinks = 0
             number_of_sources = 1
             for sample in sample_dict :
-                if sample_dict[sample] == sink_label :
+                if sample_dict[sample] == 'sink' :
                     sink_list.append(sample)
                     number_of_sinks += 1
-                if sample_dict[sample] == source_label :
+                if sample_dict[sample] == 'source' :
                     source_list.append(sample)
                     number_of_sinks += 1
                 else :
@@ -1242,7 +1242,7 @@ class sourcetrackerV2:
         
         sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
         
-        sink_df, source_df = sort_samples (sample_dict, amp_df, sink_label, source_label)
+        sink_df, source_df = sort_samples (sample_dict, amp_df)
         
         #Convert Amplicon matrix into df and split
         amp_matrix1, amp_sample_dict = get_df(amp_id, dfu)
