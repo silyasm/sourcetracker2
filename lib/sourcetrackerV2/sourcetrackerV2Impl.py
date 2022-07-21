@@ -1006,7 +1006,7 @@ class sourcetrackerV2:
             sample_dict = {id: instance[ind] for id, instance in instances.items()}
             return sample_dict
         
-        def get_df(amp_id, dfu):
+        def get_df(amp_id, dfu, sample_type):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
@@ -1245,7 +1245,7 @@ class sourcetrackerV2:
         sink_df, source_df = sort_samples (sample_dict, amp_df)
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu)
+        amp_matrix1, amp_sample_dict = get_df(amp_id, dfu, sample_type)
         amp_matrix = amp_matrix1.T
         
         #Complete SourceTracker
