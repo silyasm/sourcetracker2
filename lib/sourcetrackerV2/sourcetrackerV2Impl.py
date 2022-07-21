@@ -1000,7 +1000,7 @@ class sourcetrackerV2:
             
         def get_sample_dict(attributes, instances, sample_type):
             for ind, d in enumerate(attributes):
-                if d['attribute'] == tax_field:
+                if d['attribute'] == sample_type:
                     break
             #
             sample_dict = {id: instance[ind] for id, instance in instances.items()}
