@@ -1018,7 +1018,7 @@ class sourcetrackerV2:
             test_col_attributes_permanent_id = amp_id['col_attributemapping_ref']
             obj = dfu.get_objects({'object_refs': [test_col_attributes_permanent_id]})
             # row_attrmap_name = obj['data'][0]['info'][1]
-            attributes = obj['data'][0]['data']['attributes']
+            attributes = obj['attributes']
             sample_dict = attributes
         
             return df, sample_dict
