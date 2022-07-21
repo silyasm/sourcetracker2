@@ -1063,8 +1063,8 @@ class sourcetrackerV2:
             logging.info('start generating table json file')
             values_list = matrix_df.values.tolist()
             sinks_list = matrix_df.index.tolist()
-            for i in number_of_sinks :
-                values_list.insert(number_of_sources*i, sinks_list[i])
+            for i in range(len(values_list)) :
+                values_list[i].insert(0, sink_list[i])
             data_array = values_list
 
             total_rec = len(data_array)
