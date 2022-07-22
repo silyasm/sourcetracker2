@@ -1,5 +1,6 @@
+
 {
-    "ver": "0.0.1",
+    "ver": "0.0.2",
     "authors": [
         "smunzir"
     ],
@@ -9,9 +10,9 @@
         "input": "kbaseNarrativeMethodInput",
         "output": null
     },
-    "parameters": [ 
+    "parameters": [
         {
-          "id" : "source_amplicon_matrix_ref",
+          "id" : "amplicon_matrix_ref",
           "optional" : false,
           "advanced" : false,
           "allow_multiple" : false,
@@ -22,15 +23,54 @@
           }
         },
         {
-          "id" : "sink_amplicon_matrix_ref",
-          "optional" : false,
-          "advanced" : false,
-          "allow_multiple" : false,
-          "default_values" : [ "" ],
-          "field_type" : "text",
-          "text_options" : {
-            "valid_ws_types" : ["KBaseMatrices.AmpliconMatrix"]
+          "id": "sample_type",
+          "optional": false,
+          "advanced": false,
+          "allow_multiple": false,
+          "default_values": [ "" ],
+          "field_type": "textsubdata",
+          "textsubdata_options": {
+            "subdata_selection": {
+               "parameter_id": "amplicon_matrix_ref",
+               "path_to_subdata": [
+                   "col_attributemapping_ref",
+                   "<WSREF>",
+                   "attributes"
+               ],
+               "subdata_included": [
+                   "attributes/[*]/attribute",
+                   "attributes/[*]/source",
+                   "col_attributemapping_ref"
+               ],
+               "selection_id": "attribute",
+               "selection_description": [
+                   "attribute",
+                   "source"
+               ],
+               "description_template": "source: {{source}}"
+            },
+            "multiselection": false,
+            "show_src_obj": true,
+            "allow_custom": false
           }
+        },
+        {
+            "id": "sink_label",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "source_label",
+            "optional" : false,
+            "advanced" : false,
+            "allow_multiple" : false,
+            "default_values" : [ "" ],
+            "field_type" : "text",
+            "text_options" : {}
         },
         {
             "id" : "st_matrix_name",
@@ -59,14 +99,21 @@
                   "target_property": "workspace_id"
                 },
                 {
-                  "input_parameter" : "source_amplicon_matrix_ref",
-                  "target_property" : "source_amplicon_matrix_ref",
+                  "input_parameter" : "amplicon_matrix_ref",
+                  "target_property" : "amplicon_matrix_ref",
                   "target_type_transform": "resolved-ref"
                 },
                 {
-                  "input_parameter" : "sink_amplicon_matrix_ref",
-                  "target_property" : "sink_amplicon_matrix_ref",
-                  "target_type_transform": "resolved-ref"
+                  "input_parameter": "sink_label",
+                  "target_property": "sink_label"
+                },
+                {
+                  "input_parameter": "sample_type",
+                  "target_property": "sample_type"
+                },
+                {
+                  "input_parameter" : "source_label",
+                  "target_property" : "source_label"
                 },
                 {
                     "input_parameter" : "st_matrix_name",

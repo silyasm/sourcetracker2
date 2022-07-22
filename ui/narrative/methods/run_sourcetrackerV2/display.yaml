@@ -5,7 +5,6 @@ name: SourceTracker V2
 
 tooltip: |
     find source proportions of sink amplicon samples
-
 screenshots: []
 
 icon: icon.png
@@ -24,20 +23,46 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    source_amplicon_matrix_ref :
+    amplicon_matrix_ref :
         ui-name : |
-            Source Amplicon Matrix
+            AmpliconMatrix
         short-hint : |
-            AmpliconMatrix with raw count data for source samples
+            AmpliconMatrix with raw count data
         long-hint  : |
-            AmpliconMatrix with raw count data for source samples
-    sink_amplicon_matrix_ref :
-        ui-name : |
-            Sink Amplicon Matrix
-        short-hint : |
-            AmpliconMatrix with raw count data for sink samples
-        long-hint  : |
-            AmpliconMatrix with raw count data for sink samples
+            AmpliconMatrix with raw count data
+    threshold:
+        ui-name: |
+            Cutoff
+        short-hint: |
+            The relative abundance threshold below which taxa will be pooled into the `Other` category.
+        long-hint: |
+            The relative abundance threshold below which taxa will be pooled into the `Other` category.
+    sample_type:
+        ui-name: |
+            Sink/Sample Identification
+        short-hint: |
+            Select which row in the meatdata table holds the sink or source identification
+    sink_label:
+        ui-name: |
+            Sink Label
+        short-hint: |
+            Label used to identify which samples are sink samples.
+        long-hint: |
+            Label used to identify which samples are sink samples.
+    source_label:
+        ui-name: |
+            Source Label
+        short-hint: |
+            Label used to identify which samples are source samples.
+        long-hint: |
+            Label used to identify which samples are source samples.
+    ascending:
+        ui-name: |
+            Sort Ascending
+        short-hint: |
+            Sort ascending vs. descending
+        long-hint: |
+            Sort ascending vs. descending
     st_matrix_name:
         ui-name: |
             Proportion Matrix Object Name
@@ -45,7 +70,6 @@ parameters :
             Output Proportion Matrix object name
         long-hint  : |
             Output Proportion Matrix object name
-
 description : |
     <h3>Description: </h3>
     <p>Source Tracker, first introduced by Dan Knights in a 2011 paper (Knights et al. 2011), evaluates the relative bacterial contributions of source environments to microbial sink communities from 16S rRNA bacterial genomic sequence data. Unlike Naïve Bayes and Random Forrest, Source Tracker uses an algorithm called Latent Dirichlet Allocation, to assign sink OTU or ASV sequences to given source environments but remains accurate when contaminants of an unknown source are introduced. In short, the software uses Gibbs sampling to randomly assign sources to each sequence before reassigning sources based on the frequency data for each OTU or ASV. To learn more about the theory behind Source Tarcker, visit this Jupyter notebook. Source Tracker has been utilized and evaluated in numerous publications (Henry et al. 2016; Newton et al. 2013; Staley et al. 2018) many of which have assessed contamination in water treatment. In these studies, researchers were able to identify and compare the proportion of microbial contamination in water treatment locations along with the proportion of bacteria from known sources.</p>
@@ -54,4 +78,3 @@ description : |
     <p>Outputs: Source per Sink Table and Single Sink Table</p>
     <p>Source per Sink Table: a table displaying the proportional contributions of source samples in sinks, can be presented with or without the standard deviation of each contribution. (.txt)</p>
     <p>Single Sink Table: displays the source of each individual OTU or ASV within a given sink. (.txt) </p>
-
