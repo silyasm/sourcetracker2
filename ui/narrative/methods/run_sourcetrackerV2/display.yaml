@@ -30,6 +30,13 @@ parameters :
             AmpliconMatrix with raw count data
         long-hint  : |
             AmpliconMatrix with raw count data
+    attribute_mapping_obj_ref:
+        ui-name: |
+            AttributeMapping Object
+        short-hint: |
+            Select associated KBaseExperiments.AttributeMapping object
+        long-hint: |
+            Select associated KBaseExperiments.AttributeMapping object
     threshold:
         ui-name: |
             Cutoff

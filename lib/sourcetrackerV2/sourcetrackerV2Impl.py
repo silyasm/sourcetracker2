@@ -1184,7 +1184,14 @@ class sourcetrackerV2:
             })[0]
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
-                        
+            
+        def _build_sample_dict(dfu, sample_type, attribute_mapping_obj_ref):
+        
+            attr_obj = self.dfu.get_objects({'object_refs': [attribute_mapping_obj_ref]})
+            attr_l = attr_obj['data'][0]['data']['attributes']
+            
+            return attr_l
+            
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -1192,8 +1199,8 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
-        source_label = str(params.get('source_label'))
-        sink_label = str(params.get('sink_label'))
+        source_label = params.get('source_label')
+        sink_label = params.get('sink_label')
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
@@ -1201,7 +1208,7 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        
+        attribute_mapping_obj_ref = params.get('attribute_mapping_obj_ref')
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1224,10 +1231,10 @@ class sourcetrackerV2:
         number_of_sinks = 0
         number_of_sources = 1
         for sample in sample_dict :
-            if sample_dict[sample] == 'sink' :
+            if sample_dict[sample] == str(sink_label) :
                 sink_list.append(sample)
                 number_of_sinks += 1
-            if sample_dict[sample] == 'source' :
+            if sample_dict[sample] == str(source_label) :
                 source_list.append(sample)
                 number_of_sinks += 1
             else :
@@ -1249,13 +1256,15 @@ class sourcetrackerV2:
         
         html_report = _generate_matrix_html_report(self, mpm)
         
+        attr_l = _build_sample_dict(dfu, sample_type, attribute_mapping_obj_ref)
+        
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': str(sample_type),
+            'message': attr_l,
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
-            'direct_html_link_index': 0,
+            'direct_html_link_index': 0,g
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
         })
