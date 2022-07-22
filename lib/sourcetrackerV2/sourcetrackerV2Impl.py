@@ -1233,6 +1233,7 @@ class sourcetrackerV2:
             type_data.append(attr_obj['data'][0]['data']['instances'][sample][type_index])
 
         samp_df = pd.DataFrame(index=mdf_indx, columns=[sample_type])
+        sampl_df[sample_type] = type_data
         
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
