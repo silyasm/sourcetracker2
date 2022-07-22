@@ -1194,7 +1194,7 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        attribute_mapping_obj_ref = params['attribute_mapping_obj_ref']
+        #attribute_mapping_obj_ref = params['attribute_mapping_obj_ref']
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
