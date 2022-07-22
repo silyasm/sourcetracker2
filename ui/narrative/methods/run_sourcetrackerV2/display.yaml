@@ -24,46 +24,20 @@ suggestions:
 # Configure the display and description of parameters
 #
 parameters :
-    amplicon_matrix_ref :
+    source_amplicon_matrix_ref :
         ui-name : |
-            AmpliconMatrix
+            Source Amplicon Matrix
         short-hint : |
-            AmpliconMatrix with raw count data
+            AmpliconMatrix with raw count data for source samples
         long-hint  : |
-            AmpliconMatrix with raw count data
-    threshold:
-        ui-name: |
-            Cutoff
-        short-hint: |
-            The relative abundance threshold below which taxa will be pooled into the `Other` category.
-        long-hint: |
-            The relative abundance threshold below which taxa will be pooled into the `Other` category.
-    sample_type:
-        ui-name: |
-            Sink/Sample Identification
-        short-hint: |
-            Select which row in the meatdata table holds the sink or source identification
-    sink_label:
-        ui-name: |
-            Sink Label
-        short-hint: |
-            Label used to identify which samples are sink samples.
-        long-hint: |
-            Label used to identify which samples are sink samples.
-    source_label:
-        ui-name: |
-            Source Label
-        short-hint: |
-            Label used to identify which samples are source samples.
-        long-hint: |
-            Label used to identify which samples are source samples.
-    ascending:
-        ui-name: |
-            Sort Ascending
-        short-hint: |
-            Sort ascending vs. descending
-        long-hint: |
-            Sort ascending vs. descending
+            AmpliconMatrix with raw count data for source samples
+    sink_amplicon_matrix_ref :
+        ui-name : |
+            Sink Amplicon Matrix
+        short-hint : |
+            AmpliconMatrix with raw count data for sink samples
+        long-hint  : |
+            AmpliconMatrix with raw count data for sink samples
     st_matrix_name:
         ui-name: |
             Proportion Matrix Object Name

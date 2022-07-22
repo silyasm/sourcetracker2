@@ -1006,7 +1006,7 @@ class sourcetrackerV2:
             sample_dict = {id: instance[ind] for id, instance in instances.items()}
             return sample_dict
         
-        def get_df(amp_id, dfu, sample_type):
+        def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
             row_ids = matrix_obj['data']['row_ids']
             col_ids = matrix_obj['data']['col_ids']
@@ -1038,7 +1038,7 @@ class sourcetrackerV2:
                 else:
                     raise
 
-        def _build_table_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks):
+        def _build_table_content(self, output_directory, matrix_df):
             """
             _build_table_content: generate HTML table content for FloatMatrix2D object
             """
@@ -1101,7 +1101,7 @@ class sourcetrackerV2:
 
             return page_content
 
-        def _generate_visualization_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks):
+        def _generate_visualization_content(self, output_directory, matrix_df):
 
             tab_def_content = ''
             tab_content = ''
@@ -1111,7 +1111,7 @@ class sourcetrackerV2:
             <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Matrix Data</button>
             """
 
-            corr_table_content = _build_table_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks)
+            corr_table_content = _build_table_content(self, output_directory, matrix_df)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
@@ -1119,7 +1119,7 @@ class sourcetrackerV2:
 
             return tab_def_content + tab_content
 
-        def _generate_matrix_html_report(self, matrix_df, number_of_sources, number_of_sinks):
+        def _generate_matrix_html_report(self, matrix_df):
 
             """
             _generate_matrix_html_report: generate html summary report for matrix
@@ -1132,7 +1132,7 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_visualization_content(self, output_directory, matrix_df, number_of_sources, number_of_sinks)
+            visualization_content = _generate_visualization_content(self, output_directory, matrix_df)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
@@ -1199,51 +1199,50 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
-        source_label = str(params.get('source_label'))
-        sink_label = str(params.get('sink_label'))
-        amp_id = params['amplicon_matrix_ref']
-        sample_type = params['sample_type']
+        source_matrix = params['source_amplicon_matrix_ref']
+        sink_matrix = params['sink_amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
         
-       # example source otu data and sample dictionary
-        otus = np.array(['o%s' % i for i in range(50)])
-        sample1 = np.random.randint(0, 1000, size=50)
-        sample2 = np.random.randint(0, 1000, size=50)
-        sample3 = np.random.randint(0, 1000, size=50)
-        sample4 = np.ceil(.5*sample1+.5*sample2)
-        sample5 = np.ceil(.5*sample2+.5*sample3)
-        sample6 = np.ceil(.5*sample1+.5*sample3)
-        sample7 = sample1
-        sample8 = sample2
-        sample9 = np.random.randint(0, 1000, size=50)
-        amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
+        # example source otu data and sample dictionary
+        #otus = np.array(['o%s' % i for i in range(50)])
+        #sample1 = np.random.randint(0, 1000, size=50)
+        #sample2 = np.random.randint(0, 1000, size=50)
+        #sample3 = np.random.randint(0, 1000, size=50)
+        #sample4 = np.ceil(.5*sample1+.5*sample2)
+        #sample5 = np.ceil(.5*sample2+.5*sample3)
+        #sample6 = np.ceil(.5*sample1+.5*sample3)
+        #sample7 = sample1
+        #sample8 = sample2
+        #sample9 = np.random.randint(0, 1000, size=50)
+        #amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
         
-        sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
+        #sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
         
         #Seperate Sink and Source samples into distinct dataframes
-        sink_list = []
-        source_list = []
-        number_of_sinks = 0
-        number_of_sources = 1
-        for sample in sample_dict :
-            if sample_dict[sample] == 'sink' :
-                sink_list.append(sample)
-                number_of_sinks += 1
-            if sample_dict[sample] == 'source' :
-                source_list.append(sample)
-                number_of_sinks += 1
-            else :
-                pass
-        sink_df = amp_df.loc[sink_list]
-        source_df = amp_df.loc[source_list]
+        #sink_list = []
+        #source_list = []
+        #number_of_sinks = 0
+        #number_of_sources = 1
+        #for sample in sample_dict :
+        #    if sample_dict[sample] == 'sink' :
+        #        sink_list.append(sample)
+        #        number_of_sinks += 1
+        #    if sample_dict[sample] == 'source' :
+        #        source_list.append(sample)
+        #        number_of_sinks += 1
+        #    else :
+        #        pass
         
         #Convert Amplicon matrix into df and split
-        amp_matrix1 = get_df(amp_id, dfu, sample_type)
-        amp_matrix = amp_matrix1.T
+        source_amp_matrix = get_df(source_matrix, dfu)
+        source_df = amp_matrix.T
+        
+        sink_amp_matrix = get_df(sink_matrix, dfu)
+        sink_df = sink_amp_matrix.T
         
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
@@ -1253,8 +1252,8 @@ class sourcetrackerV2:
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        html_report = _generate_matrix_html_report(self, mpm, number_of_sources, number_of_sinks)
-        
+        html_report = _generate_matrix_html_report(self, mpm)
+                
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
             'message': 'Source Tracker Report',
