@@ -1171,7 +1171,7 @@ class sourcetrackerV2:
 
             st_data.update({'proportion_matrix': _df_to_list(mpm)})
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
-            st_data.update({'rotation_matrix': amp_matrix})
+            st_data.update({'rotation_matrix': _df_to_list(amp_matrix)})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
             info = dfu.save_objects({
@@ -1246,7 +1246,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, attr_l, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
@@ -1255,7 +1255,7 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': str(sample_type),
+            'message': 'Samples were separated using data from: ' + str(sample_type),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
