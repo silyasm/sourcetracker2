@@ -1258,12 +1258,12 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, samp_df, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        html_report = _generate_matrix_html_report(self, mpm)
+        html_report = _generate_matrix_html_report(self, samp_df)
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
