@@ -1196,6 +1196,7 @@ class sourcetrackerV2:
         sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
+        attribute_mapping_obj_ref = params.get('attribute_mapping_obj_ref')
         self.dfu = DataFileUtil(self.callback_url)
         dfu = self.dfu
         workspace_name = params['workspace_name']
