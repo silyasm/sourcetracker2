@@ -1224,10 +1224,10 @@ class sourcetrackerV2:
         number_of_sinks = 0
         number_of_sources = 1
         for sample in sample_dict :
-            if sample_dict[sample] == str(sink_label) :
+            if sample_dict[sample] == 'source' :
                 sink_list.append(sample)
                 number_of_sinks += 1
-            if sample_dict[sample] == str(source_label) :
+            if sample_dict[sample] == 'sink' :
                 source_list.append(sample)
                 number_of_sinks += 1
             else :
