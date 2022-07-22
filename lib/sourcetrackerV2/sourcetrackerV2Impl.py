@@ -1171,7 +1171,7 @@ class sourcetrackerV2:
 
             st_data.update({'proportion_matrix': _df_to_list(mpm)})
             st_data.update({'proportion_matrix_stdev': _df_to_list(mps)})
-            st_data.update({'rotation_matrix': _df_to_list(amp_matrix)})
+            st_data.update({'rotation_matrix': amp_matrix})
 
             obj_type = 'KBaseExperiments.PCAMatrix'
             info = dfu.save_objects({
@@ -1218,7 +1218,10 @@ class sourcetrackerV2:
         amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
         
         sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
-
+        #Create samp_dict
+        attr_obj = self.dfu.get_objects({'object_refs': [attribute_mapping_obj_ref]})
+        attr_l = attr_obj['data'][0]['data']['attributes']
+        
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
         source_list = []
@@ -1243,7 +1246,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, attr_l, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
