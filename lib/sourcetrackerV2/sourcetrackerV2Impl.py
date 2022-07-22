@@ -998,13 +998,6 @@ class sourcetrackerV2:
             
             return props, props_stds
             
-        def get_sample_dict(attributes, instances, sample_type):
-            for ind, d in enumerate(attributes):
-                if d['attribute'] == tax_field:
-                    break
-            #
-            sample_dict = {id: instance[ind] for id, instance in instances.items()}
-            return sample_dict
         
         def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
@@ -1201,7 +1194,7 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        attribute_mapping_obj_ref = params.get('attribute_mapping_obj_ref')
+        attribute_mapping_obj_ref = params['attribute_mapping_obj_ref']
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
