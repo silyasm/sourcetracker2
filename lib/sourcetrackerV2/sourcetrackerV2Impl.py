@@ -1185,13 +1185,6 @@ class sourcetrackerV2:
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
             
-        def _build_sample_dict(dfu, sample_type, attribute_mapping_obj_ref):
-        
-            attr_obj = self.dfu.get_objects({'object_refs': [attribute_mapping_obj_ref]})
-            attr_l = attr_obj['data'][0]['data']['attributes']
-            
-            return attr_l
-            
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -1255,12 +1248,10 @@ class sourcetrackerV2:
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
         html_report = _generate_matrix_html_report(self, mpm)
-        
-        attr_l = _build_sample_dict(dfu, sample_type, attribute_mapping_obj_ref)
-        
+                
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': attr_l,
+            'message': 'there is no summary',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
