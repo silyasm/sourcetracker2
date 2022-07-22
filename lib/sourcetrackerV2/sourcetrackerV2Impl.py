@@ -998,6 +998,13 @@ class sourcetrackerV2:
             
             return props, props_stds
             
+        def get_sample_dict(attributes, instances, sample_type):
+            for ind, d in enumerate(attributes):
+                if d['attribute'] == tax_field:
+                    break
+            #
+            sample_dict = {id: instance[ind] for id, instance in instances.items()}
+            return sample_dict
         
         def get_df(amp_id, dfu):
             matrix_obj = dfu.get_objects({'object_refs': [amp_id]})['data'][0]['data']
@@ -1177,7 +1184,7 @@ class sourcetrackerV2:
             })[0]
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
-            
+                        
         alpha1 = .01
         alpha2 = .001
         beta = 10
@@ -1185,8 +1192,8 @@ class sourcetrackerV2:
         draws_per_restart = 1
         burnin = 2
         delay = 2
-        source_label = params.get('source_label')
-        sink_label = params.get('sink_label')
+        source_label = str(params.get('source_label'))
+        sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
         amp_id = params['amplicon_matrix_ref']
         self.dfu = DataFileUtil(self.callback_url)
@@ -1194,7 +1201,7 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        #attribute_mapping_obj_ref = params['attribute_mapping_obj_ref']
+        
         
        # example source otu data and sample dictionary
         otus = np.array(['o%s' % i for i in range(50)])
@@ -1217,10 +1224,10 @@ class sourcetrackerV2:
         number_of_sinks = 0
         number_of_sources = 1
         for sample in sample_dict :
-            if sample_dict[sample] == 'source' :
+            if sample_dict[sample] == 'sink' :
                 sink_list.append(sample)
                 number_of_sinks += 1
-            if sample_dict[sample] == 'sink' :
+            if sample_dict[sample] == 'source' :
                 source_list.append(sample)
                 number_of_sinks += 1
             else :
@@ -1241,14 +1248,14 @@ class sourcetrackerV2:
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
         html_report = _generate_matrix_html_report(self, mpm)
-                
+        
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': 'there is no summary',
+            'message': str(sample_type),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
-            'direct_html_link_index': 0,g
+            'direct_html_link_index': 0,
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
         })
