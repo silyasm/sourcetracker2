@@ -1215,10 +1215,15 @@ class sourcetrackerV2:
         sample7 = sample1
         sample8 = sample2
         sample9 = np.random.randint(0, 1000, size=50)
-        amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
+        #amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
         
-        sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
-        #Create samp_dict df (taken from NMDS app)
+        #sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
+        
+        #Convert Amplicon matrix into df and split
+        amp_matrix = get_df(amp_id, dfu)
+        amp_df = amp_matrix.T
+        
+        #Create samp_df (taken from NMDS app)
         attr_obj = self.dfu.get_objects({'object_refs': [attribute_mapping_obj_ref]})
         attr_l = attr_obj['data'][0]['data']['attributes']
         type_index = None
@@ -1237,28 +1242,20 @@ class sourcetrackerV2:
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
         source_list = []
-        number_of_sinks = 0
-        number_of_sources = 1
-        for sample in sample_dict :
-            if sample_dict[sample] == 'sink' :
+        for sample in samp_df.index.tolist() :
+            if samp_df.at[sample, sample_type] == 'sink' :
                 sink_list.append(sample)
-                number_of_sinks += 1
-            if sample_dict[sample] == 'source' :
+            if samp_df.at[sample, sample_type] == 'source' :
                 source_list.append(sample)
-                number_of_sinks += 1
             else :
                 pass
         sink_df = amp_df.loc[sink_list]
         source_df = amp_df.loc[source_list]
         
-        #Convert Amplicon matrix into df and split
-        amp_matrix1 = get_df(amp_id, dfu)
-        amp_matrix = amp_matrix1.T
-        
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, samp_df, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
