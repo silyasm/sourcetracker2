@@ -1207,37 +1207,7 @@ class sourcetrackerV2:
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
         
-        # example source otu data and sample dictionary
-        #otus = np.array(['o%s' % i for i in range(50)])
-        #sample1 = np.random.randint(0, 1000, size=50)
-        #sample2 = np.random.randint(0, 1000, size=50)
-        #sample3 = np.random.randint(0, 1000, size=50)
-        #sample4 = np.ceil(.5*sample1+.5*sample2)
-        #sample5 = np.ceil(.5*sample2+.5*sample3)
-        #sample6 = np.ceil(.5*sample1+.5*sample3)
-        #sample7 = sample1
-        #sample8 = sample2
-        #sample9 = np.random.randint(0, 1000, size=50)
-        #amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
-        
-        #sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
-        
-        #Seperate Sink and Source samples into distinct dataframes
-        #sink_list = []
-        #source_list = []
-        #number_of_sinks = 0
-        #number_of_sources = 1
-        #for sample in sample_dict :
-        #    if sample_dict[sample] == 'sink' :
-        #        sink_list.append(sample)
-        #        number_of_sinks += 1
-        #    if sample_dict[sample] == 'source' :
-        #        source_list.append(sample)
-        #        number_of_sinks += 1
-        #    else :
-        #        pass
-        
-        #Convert Amplicon matrix into df and split
+        #Convert Amplicon matrix into df
         source_amp_matrix = get_df(source_matrix, dfu)
         source_df = source_amp_matrix.T
         
@@ -1247,7 +1217,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, sink_df, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
@@ -1259,7 +1229,7 @@ class sourcetrackerV2:
             'message': 'Source Tracker Report',
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
-            'html_links': html_report,g
+            'html_links': html_report,
             'direct_html_link_index': 0,
             'html_window_height': 666,
             'report_object_name': 'kb_st_report_' + str(uuid.uuid4())
