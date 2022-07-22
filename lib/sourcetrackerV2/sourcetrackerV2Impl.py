@@ -1239,7 +1239,7 @@ class sourcetrackerV2:
         
         #Convert Amplicon matrix into df and split
         source_amp_matrix = get_df(source_matrix, dfu)
-        source_df = amp_matrix.T
+        source_df = source_amp_matrix.T
         
         sink_amp_matrix = get_df(sink_matrix, dfu)
         sink_df = sink_amp_matrix.T
