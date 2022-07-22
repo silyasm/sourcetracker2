@@ -1218,9 +1218,21 @@ class sourcetrackerV2:
         amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
         
         sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
-        #Create samp_dict
+        #Create samp_dict df (taken from NMDS app)
         attr_obj = self.dfu.get_objects({'object_refs': [attribute_mapping_obj_ref]})
         attr_l = attr_obj['data'][0]['data']['attributes']
+        type_index = None
+        for i in range(len(attr_l)):
+            if attr_l[i]['attribute'] == sample_type:
+                type_index = i
+                break
+
+        type_data = []
+        mdf_indx = attr_obj['data'][0]['data']['instances'].keys()
+        for sample in mdf_indx:
+            type_data.append(attr_obj['data'][0]['data']['instances'][sample][type_index])
+
+        samp_df = pd.DataFrame(index=mdf_indx, columns=[sample_type])
         
         #Seperate Sink and Source samples into distinct dataframes
         sink_list = []
@@ -1246,7 +1258,7 @@ class sourcetrackerV2:
         #Complete SourceTracker
         mpm, mps = gibbs(source_df, sink_df, alpha1, alpha2, beta, restarts, draws_per_restart, burnin, delay, create_feature_tables=True)
         
-        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, amp_matrix, mpm, mps, st_matrix_name)
+        sourcetracker_ref = _save_proportion_matrix(dfu, workspace_name, samp_df, mpm, mps, st_matrix_name)
         return_val = {'sourcetracker_ref': sourcetracker_ref}
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
