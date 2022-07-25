@@ -1266,6 +1266,7 @@ class sourcetrackerV2:
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
         html_report = _generate_matrix_html_report(self, mpm)
+        html_report += _generate_matrix_html_report(self, mps)
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
