@@ -1099,35 +1099,17 @@ class sourcetrackerV2:
 
             return page_content
 
-        def _generate_mpm_visualization_content(self, output_directory, matrix_df):
+        def _generate_visualization_content(self, output_directory, mpm, mps):
 
             tab_def_content = ''
             tab_content = ''
 
             tab_def_content += """\n<div class="tab">\n"""
             tab_def_content += """
-            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Table</button>
+            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Tables </button>
             """
 
-            corr_table_content = _build_table_content(self, output_directory, matrix_df)
-            tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
-                                                                                    corr_table_content)
-
-            tab_def_content += """\n</div>\n"""
-
-            return tab_def_content + tab_content
-            
-        def _generate_mps_visualization_content(self, output_directory, matrix_df):
-
-            tab_def_content = ''
-            tab_content = ''
-
-            tab_def_content += """\n<div class="tab">\n"""
-            tab_def_content += """
-            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Table with standard deviation</button>
-            """
-
-            corr_table_content = _build_table_content(self, output_directory, matrix_df)
+            corr_table_content = _build_table_content(self, output_directory, mpm) + _build_table_content(self, output_directory, mps)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
