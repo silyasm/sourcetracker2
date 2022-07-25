@@ -1099,14 +1099,32 @@ class sourcetrackerV2:
 
             return page_content
 
-        def _generate_visualization_content(self, output_directory, matrix_df):
+        def _generate_mpm_visualization_content(self, output_directory, matrix_df):
 
             tab_def_content = ''
             tab_content = ''
 
             tab_def_content += """\n<div class="tab">\n"""
             tab_def_content += """
-            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Matrix Data</button>
+            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Table</button>
+            """
+
+            corr_table_content = _build_table_content(self, output_directory, matrix_df)
+            tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
+                                                                                    corr_table_content)
+
+            tab_def_content += """\n</div>\n"""
+
+            return tab_def_content + tab_content
+            
+        def _generate_mps_visualization_content(self, output_directory, matrix_df):
+
+            tab_def_content = ''
+            tab_content = ''
+
+            tab_def_content += """\n<div class="tab">\n"""
+            tab_def_content += """
+            <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Table with standard deviation</button>
             """
 
             corr_table_content = _build_table_content(self, output_directory, matrix_df)
@@ -1117,7 +1135,7 @@ class sourcetrackerV2:
 
             return tab_def_content + tab_content
 
-        def _generate_matrix_html_report(self, matrix_df):
+        def _generate_matrix_html_report(self, mpm, mps):
 
             """
             _generate_matrix_html_report: generate html summary report for matrix
@@ -1130,7 +1148,7 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_visualization_content(self, output_directory, matrix_df)
+            visualization_content = _generate_mpm_visualization_content(self, output_directory, mpm) + _generate_mps_visualization_content(self, output_directory, mps)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
@@ -1265,8 +1283,7 @@ class sourcetrackerV2:
         objects_created = list()
         objects_created.append({'ref': sourcetracker_ref,'description': 'Sourcetracker Matrix'})
         
-        html_report = _generate_matrix_html_report(self, mpm)
-        html_report += _generate_matrix_html_report(self, mps)
+        html_report = _generate_matrix_html_report(self, mpm, mps)
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
