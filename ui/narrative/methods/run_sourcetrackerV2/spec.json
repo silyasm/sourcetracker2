@@ -94,6 +94,69 @@
               "valid_ws_types" : ["KBaseMatrices"],
               "is_output_name" : true
             }
+        },
+        {
+            "id": "alpha1",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ ".01" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "alpha2",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ ".001" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "beta",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "10" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "restarts",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "1" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "draws_per_restart",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "1" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "burnin",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "2" ],
+            "field_type" : "text",
+            "text_options" : {}
+        },
+        {
+            "id": "delay",
+            "optional" : false,
+            "advanced" : true,
+            "allow_multiple" : false,
+            "default_values" : [ "2" ],
+            "field_type" : "text",
+            "text_options" : {}
         }
     ],
     "behavior": {
@@ -130,6 +193,34 @@
                 {
                   "input_parameter" : "source_label",
                   "target_property" : "source_label"
+                },
+                {
+                  "input_parameter" : "alpha1",
+                  "target_property" : "alpha1"
+                },
+                {
+                  "input_parameter" : "alpha2",
+                  "target_property" : "alpha2"
+                },
+                {
+                  "input_parameter" : "beta",
+                  "target_property" : "beta"
+                },
+                {
+                  "input_parameter" : "restarts",
+                  "target_property" : "restarts"
+                },
+                {
+                  "input_parameter" : "draws_per_restart",
+                  "target_property" : "draws_per_restart"
+                },
+                {
+                  "input_parameter" : "burnin",
+                  "target_property" : "burnin"
+                },
+                {
+                  "input_parameter" : "delay",
+                  "target_property" : "delay"
                 },
                 {
                     "input_parameter" : "st_matrix_name",

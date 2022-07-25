@@ -56,6 +56,78 @@ parameters :
             Label used to identify which samples are source samples.
         long-hint: |
             Label used to identify which samples are source samples.
+    alpha1:
+        ui-name: |
+            Alpha1
+        short-hint: |
+            Prior counts of each feature in the training environments.
+        long-hint: |
+            Prior counts of each feature in the training environments. Higher
+            values decrease the trust in the training environments, and make
+            the source environment distributions over taxa smoother. A value of
+            0.001 indicates reasonably high trust in all source environments, even
+            those with few training sequences. A more conservative value would be
+            0.01.
+    alpha2:
+        ui-name: |
+            Alpha2
+        short-hint: |
+            Prior counts of each feature in the Unknown environment.
+        long-hint: |
+            Prior counts of each feature in the Unknown environment. Higher
+            values make the Unknown environment smoother and less prone to
+            overfitting given a training sample.
+    beta:
+        ui-name: |
+            Beta
+        short-hint: |
+            Number of prior counts of test sequences from each feature in each
+            environment.
+        long-hint: |
+            Number of prior counts of test sequences from each feature in each
+            environment.
+    restarts:
+        ui-name: |
+            Restarts
+        short-hint: |
+            Number of independent Markov chains to grow.
+        long-hint: |
+            Number of independent Markov chains to grow. `draws_per_restart` *
+            `restarts` gives the number of samplings of the mixing proportions that
+            will be generated.
+    draws_per_restart:
+        ui-name: |
+            Draws per Restart
+        short-hint: |
+            Number of times to sample the state of the Markov chain for each
+            independent chain grown.
+        long-hint: |
+            Number of times to sample the state of the Markov chain for each
+            independent chain grown.
+    burnin:
+        ui-name: |
+            Burn-in
+        short-hint: |
+            Number of passes (withdarawal and reassignment of every sequence in the
+            sink) that will be made before a sample (draw) will be taken. Higher
+            values allow more convergence towards the true distribtion before draws
+            are taken
+        long-hint: |
+            Number of passes (withdarawal and reassignment of every sequence in the
+            sink) that will be made before a sample (draw) will be taken. Higher
+            values allow more convergence towards the true distribtion before draws
+            are taken
+    delay:
+        ui-name: |
+            Delay
+        short-hint: |
+            Number passes between each sampling (draw) of the Markov chain.
+        long-hint: |
+            Number passes between each sampling (draw) of the Markov chain. Once
+            the burnin passes have been made, a sample will be taken, and
+            additional samples will be drawn every `delay` number of passes. This
+            is also known as 'thinning'. Thinning helps reduce the impact of
+            correlation between adjacent states of the Markov chain.
     st_matrix_name:
         ui-name: |
             Proportion Matrix Object Name

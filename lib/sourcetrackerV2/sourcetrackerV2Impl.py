@@ -1190,13 +1190,13 @@ class sourcetrackerV2:
 
             return "%s/%s/%s" % (info[6], info[0], info[4])
                         
-        alpha1 = .01
-        alpha2 = .001
-        beta = 10
-        restarts = 5
-        draws_per_restart = 1
-        burnin = 2
-        delay = 2
+        alpha1 = float(params.get('alpha1'))
+        alpha2 = float(params.get('alpha2'))
+        beta = int(params.get('beta'))
+        restarts = int(params.get('restarts'))
+        draws_per_restart = int(params.get('draws_per_restart'))
+        burnin = int(params.get('burnin'))
+        delay = int(params.get('delay'))
         source_label = str(params.get('source_label'))
         sink_label = str(params.get('sink_label'))
         sample_type = params.get('sample_type')
