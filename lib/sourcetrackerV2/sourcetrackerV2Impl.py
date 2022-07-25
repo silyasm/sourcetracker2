@@ -1253,7 +1253,7 @@ class sourcetrackerV2:
             if samp_df.at[sample, sample_type] == source_label :
                 source_list.append(sample)
             else :
-                raise ValueError('Sample ' + sample + 'had a ' + str(sample_type) + ' field that did not match ' + sink_label +' nor ' + source_label)
+                pass
         sink_df = amp_df.loc[sink_list]
         source_df = amp_df.loc[source_list]
         
