@@ -1130,7 +1130,7 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_mpm_visualization_content(self, output_directory, mpm) + _generate_mps_visualization_content(self, output_directory, mps)
+            visualization_content = _generate_mpm_visualization_content(self, output_directory, mpm, mps)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
@@ -1253,7 +1253,7 @@ class sourcetrackerV2:
             if samp_df.at[sample, sample_type] == source_label :
                 source_list.append(sample)
             else :
-                pass
+                raise ValueError('Sample ' + sample + 'had a ' + str(sample_type) + ' field that did not match ' + sink_label +' nor ' + source_label)
         sink_df = amp_df.loc[sink_list]
         source_df = amp_df.loc[source_list]
         
