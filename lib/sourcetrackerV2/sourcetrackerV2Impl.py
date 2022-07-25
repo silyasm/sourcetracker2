@@ -1253,7 +1253,7 @@ class sourcetrackerV2:
         
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report({
-            'message': 'Samples were separated using data from: ' + str(sample_type),
+            'message': 'The top table reports proportions without standard deviation while the bottom table includes standard deviation. Samples were separated using data from: ' + str(sample_type),
             'workspace_name': params['workspace_name'],
             'objects_created': objects_created,
             'html_links': html_report,
