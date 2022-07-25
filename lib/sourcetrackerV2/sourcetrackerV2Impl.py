@@ -1130,7 +1130,7 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_mpm_visualization_content(self, output_directory, mpm, mps)
+            visualization_content = _generate_visualization_content(self, output_directory, mpm, mps)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
@@ -1207,22 +1207,6 @@ class sourcetrackerV2:
         workspace_name = params['workspace_name']
         PARAM_OUT_MATRIX = 'st_matrix_name'
         st_matrix_name = params.get(PARAM_OUT_MATRIX)
-        
-        
-       # example source otu data and sample dictionary
-        otus = np.array(['o%s' % i for i in range(50)])
-        sample1 = np.random.randint(0, 1000, size=50)
-        sample2 = np.random.randint(0, 1000, size=50)
-        sample3 = np.random.randint(0, 1000, size=50)
-        sample4 = np.ceil(.5*sample1+.5*sample2)
-        sample5 = np.ceil(.5*sample2+.5*sample3)
-        sample6 = np.ceil(.5*sample1+.5*sample3)
-        sample7 = sample1
-        sample8 = sample2
-        sample9 = np.random.randint(0, 1000, size=50)
-        #amp_df = pd.DataFrame([sample1, sample2, sample3, sample4, sample5, sample6, sample7, sample8, sample9, ], index=['sample1', 'sample2', 'sample3', 'sample4', 'sample5', 'sample6', 'sample7', 'sample8', 'sample9'], columns=otus, dtype=np.int32)
-        
-        #sample_dict = {'sample1' : 'source', 'sample2' : 'source', 'sample3' : 'source', 'sample4' : 'sink', 'sample5' : 'sink', 'sample6' : 'sink', 'sample7' : 'sink', 'sample8' : 'sink', 'sample9' : 'sink',}
         
         #Convert Amplicon matrix into df and split
         amp_matrix = get_df(amp_id, dfu)
