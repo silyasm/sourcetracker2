@@ -1,3 +1,8 @@
+# Functions taken from three sources:
+# Most of code imported from SourceTracker2 code, GitHub link: https://github.com/biota/sourcetracker2/blob/master/sourcetracker/_sourcetracker.py
+# Taxonomy Abundance Barplot GitHub Link: https://github.com/kbaseapps/TaxonomyAbundance/tree/da7a8968bb355e2abfc531001474e3b8104eb50f
+# NMDS Analysis app GitHub link: https://github.com/kbaseapps/kb_Amplicon/blob/ad8832c93cc49a7f69e244444095c5aa2dc479f0/lib/kb_Amplicon/Utils/MDSUtils.py
+
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
 import logging
@@ -28,7 +33,7 @@ class sourcetrackerV2:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.1"
+    VERSION = "0.1.0"
     GIT_URL = "https://github.com/silyasm/sourcetrackerV2"
     GIT_COMMIT_HASH = "49bb79a94fad0690caafc68f1bf96257a5a71edd"
 
@@ -1243,9 +1248,9 @@ class sourcetrackerV2:
         sink_list = []
         source_list = []
         for sample in samp_df.index.tolist() :
-            if samp_df.at[sample, sample_type] == 'sink' :
+            if samp_df.at[sample, sample_type] == sink_label :
                 sink_list.append(sample)
-            if samp_df.at[sample, sample_type] == 'source' :
+            if samp_df.at[sample, sample_type] == source_label :
                 source_list.append(sample)
             else :
                 pass
