@@ -102,7 +102,9 @@
             "allow_multiple" : false,
             "default_values" : [ ".01" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "float"
+            }
         },
         {
             "id": "alpha2",
@@ -111,7 +113,9 @@
             "allow_multiple" : false,
             "default_values" : [ ".001" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "float"
+            }
         },
         {
             "id": "beta",
@@ -120,7 +124,9 @@
             "allow_multiple" : false,
             "default_values" : [ "10" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "int"
+            }
         },
         {
             "id": "restarts",
@@ -129,7 +135,9 @@
             "allow_multiple" : false,
             "default_values" : [ "1" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "int"
+            }
         },
         {
             "id": "draws_per_restart",
@@ -138,25 +146,31 @@
             "allow_multiple" : false,
             "default_values" : [ "1" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "int"
+            }
         },
         {
             "id": "burnin",
             "optional" : false,
             "advanced" : true,
             "allow_multiple" : false,
-            "default_values" : [ "2" ],
+            "default_values" : [ "5" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "int"
+            }
         },
         {
             "id": "delay",
             "optional" : false,
             "advanced" : true,
             "allow_multiple" : false,
-            "default_values" : [ "2" ],
+            "default_values" : [ "3" ],
             "field_type" : "text",
-            "text_options" : {}
+            "text_options" : {
+                "validate_as": "int"
+            }
         }
     ],
     "behavior": {
