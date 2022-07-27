@@ -1109,7 +1109,7 @@ class sourcetrackerV2:
             <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Tables </button>
             """
 
-            corr_table_content = _build_table_content(self, output_directory, matrix)
+            corr_table_content = _build_table_content(self, output_directory, matrix_df)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
