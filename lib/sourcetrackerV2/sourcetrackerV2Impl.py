@@ -1099,7 +1099,7 @@ class sourcetrackerV2:
 
             return page_content
 
-        def _generate_visualization_content(self, output_directory, mpm, mps):
+        def _generate_visualization_content(self, output_directory, matrix_df):
 
             tab_def_content = ''
             tab_content = ''
@@ -1109,7 +1109,7 @@ class sourcetrackerV2:
             <button class="tablinks" onclick="openTab(event, 'MatrixData')" id="defaultOpen">Proportion Tables </button>
             """
 
-            corr_table_content = _build_table_content(self, output_directory, mpm) + _build_table_content(self, output_directory, mps)
+            corr_table_content = _build_table_content(self, output_directory, matrix)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
 
@@ -1130,14 +1130,20 @@ class sourcetrackerV2:
             _mkdir_p(self, output_directory)
             result_file_path = os.path.join(output_directory, 'matrix_report.html')
 
-            visualization_content = _generate_visualization_content(self, output_directory, mpm, mps)
+            mpm_visualization_content = _generate_visualization_content(self, output_directory, mpm)
+            mps_visualization_content = _generate_visualization_content(self, output_directory, mps)
 
             with open(result_file_path, 'w') as result_file:
                 with open(os.path.join(os.path.dirname(__file__), 'templates', 'matrix_template.html'),
                           'r') as report_template_file:
-                    report_template = report_template_file.read()
-                    report_template = report_template.replace('<p>Visualization_Content</p>',
-                                                              visualization_content)
+                    mpm_report_template = report_template_file.read()
+                    mpm_report_template = mpm_report_template.replace('<p>Visualization_Content</p>',
+                                                              mpm_visualization_content)
+                    mps_report_template = report_template_file.read()
+                    mps_report_template = mps_report_template.replace('<p>Visualization_Content</p>',
+                                                              mps_visualization_content)
+                                                              
+                    report_template = mpm_report_template + mps_report_template
                     result_file.write(report_template)
 
             report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,

@@ -155,7 +155,7 @@
             "optional" : false,
             "advanced" : true,
             "allow_multiple" : false,
-            "default_values" : [ "5" ],
+            "default_values" : [ "3" ],
             "field_type" : "text",
             "text_options" : {
                 "validate_as": "int"
@@ -166,7 +166,7 @@
             "optional" : false,
             "advanced" : true,
             "allow_multiple" : false,
-            "default_values" : [ "3" ],
+            "default_values" : [ "2" ],
             "field_type" : "text",
             "text_options" : {
                 "validate_as": "int"
