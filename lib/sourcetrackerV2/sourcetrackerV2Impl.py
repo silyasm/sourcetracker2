@@ -1112,10 +1112,6 @@ class sourcetrackerV2:
             corr_table_content = _build_table_content(self, output_directory, mpm)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
-            viewer_name = 'data_summary_mps'
-            tab_def_content += '''\n<button class="tablinks" '''
-            tab_def_content += '''onclick="openTab(event, '{}')"'''.format(viewer_name)
-            tab_def_content += ''' id="defaultOpen"'''
             corr_table_content = _build_table_content(self, output_directory, mps)
             tab_content += """\n<div id="MatrixData" class="tabcontent">{}</div>\n""".format(
                                                                                     corr_table_content)
